@@ -9,19 +9,18 @@ class Solution:
         if not root:
             return []
         deque = [root]
-        res = [[root.val]]
+        res = []
         while(deque):
             temp = []
             for i in range(len(deque)):
                 elem = deque.pop(0)
+                temp.append(elem.val)
                 if elem.left:
                     deque.append(elem.left)
-                    temp.append(elem.left.val)
+                    
                 if elem.right:
                     deque.append(elem.right)
-                    temp.append(elem.right.val)
-            if temp:
-                res.append(temp)
+            res.append(temp)
         return res
 
             
