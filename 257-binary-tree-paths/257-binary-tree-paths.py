@@ -6,12 +6,11 @@
 #         self.right = right
 class Solution:
     def binaryTreePaths(self, root: Optional[TreeNode]) -> List[str]:
-        stack = [['',root]]
+        stack = [('',root)]
         path =''
         res = []
         while stack:
-            elem = stack.pop()
-            path, cur = elem[0], elem[1]
+            path, cur = stack.pop()
             if cur != root:
                 path += '->'+str(cur.val)
             else:
