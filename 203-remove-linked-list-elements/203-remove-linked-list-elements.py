@@ -9,11 +9,15 @@ class Solution:
         senitel.next = head
         pre = senitel
         cur = senitel.next
-        while cur:
+        def dfs(pre, cur,senitel):
+            if not cur:
+                return senitel.next
             if cur.val == val:
                 pre.next = cur.next
                 cur = pre.next
             else:
                 pre = pre.next
-                cur = cur.next                
-        return senitel.next
+                cur = cur.next
+            return dfs(pre, cur,senitel)
+        return dfs(pre,cur,senitel)
+        
