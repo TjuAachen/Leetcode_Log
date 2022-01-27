@@ -10,10 +10,6 @@ class Solution:
         senitel2.next = list2
         r = senitel2
         p, q = list1, list2
-        if not p:
-            return q
-        if not q:
-            return p
         while(p and q):
             if p.val > q.val:
                 r.next = q
