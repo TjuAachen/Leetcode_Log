@@ -4,12 +4,9 @@ class Solution:
         res = [intervals[0]]
         
         for i in intervals[1:]:
-            former = res.pop()
-            if former[1] >= i[0]:
-                former = [former[0],max(i[1],former[1])] 
-                res.append(former)
+            if res[-1][1] >= i[0]:
+                res[-1][1] = max(i[1],res[-1][1])
             else:
-                res.append(former)
                 res.append(i)
         return res
             
