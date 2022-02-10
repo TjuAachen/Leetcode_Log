@@ -15,6 +15,10 @@ class SummaryRanges:
 
     def addNum(self, val: int) -> None:
         self.arr.append(val)
+        if not self.res:
+            self.res = [[val, val]]
+            self.record[val] = True
+            return
         if val not in self.record:
             self.record[val] = True
             if val + 1 in self.record and val - 1 in self.record:
