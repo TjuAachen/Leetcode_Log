@@ -13,28 +13,20 @@ class Solution(object):
             for i in range(maxChoosableInteger):
                 ith = state & (1<<i)
                 if ith == 0:
-                    state = state|(1<<i)
-                    total += i + 1
-                    if (state,total) not in result:
-                        result[(state, total)] = helper(state, total)
+                    newState = state|(1<<i)
+                    newTotal = total + i + 1
+                    if (newState,newTotal) not in result:
+                        result[(newState, newTotal)] = helper(newState, newTotal)
                         
-                    if total >= desiredTotal or result[(state, total)]:
+                    if newTotal >= desiredTotal or result[(newState, newTotal)]:
+                        if state == 0: return True
                         return False
-                    total = total - i - 1
-                    state = state&~(1<<i)
+                    total = newTotal - i - 1
+                    state = newState&~(1<<i)
+            if state == 0: return False
             return True
-        state = 0
-        total = 0
-        for i in range(maxChoosableInteger):
-                ith = state & (1<<i)
-                if ith == 0:
-                    state = state|(1<<i)
-                    total += i + 1
-                    if total >= desiredTotal or helper(state, total):
-                        return True
-                    total = total - i - 1
-                    state = state&~(1<<i)
-        return False
+        return helper(0,0)
+
         
                     
                     
