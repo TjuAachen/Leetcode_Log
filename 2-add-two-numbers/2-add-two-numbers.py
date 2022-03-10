@@ -10,53 +10,29 @@ class Solution(object):
         :type l2: ListNode
         :rtype: ListNode
         """
-        n1 = l1
-        n2 = l2
-        root = ListNode(-1)
-        next_pos = 0
-        while(n1 and n2):            
-            this = (n1.val + n2.val + next_pos)%10
-            temp = (n1.val + n2.val + next_pos)/10
-            if root.val == -1:
-                root.val = this
-                cur = root
+        p = l1
+        q = l2
+        carry = 0
+        dummyhead = ListNode()
+        cur = dummyhead
+        while(p != None or q != None):
+            if p != None:
+                p_val = p.val
+                p = p.next
             else:
-                cur.next = ListNode(this)
-                cur = cur.next
-            n1 = n1.next
-            n2 = n2.next
-            next_pos = temp
-        if n1:
-            final = n1
-            while(next_pos > 0 and final):
-                temp = (final.val + next_pos)/10
-                final.val = (final.val + next_pos)%10
-                next_pos = temp
-                if final.next:
-                    final = final.next
-                else:
-                    break
-            if next_pos > 0:
-                final.next = ListNode(next_pos)
-            cur.next = n1
-            
-        elif n2:
-            final = n2
-            while(next_pos > 0 and final):
-                temp = (final.val + next_pos)/10
-                final.val = (final.val + next_pos)%10
-                next_pos = temp
-                if final.next:
-                    final = final.next
-                else:
-                    break
-            if next_pos > 0:
-                final.next = ListNode(next_pos)
-            cur.next = n2
-        else:
-            if(next_pos>0):
-                cur.next = ListNode(next_pos)
-        return root
+                p_val = 0
+            if q != None:
+                q_val = q.val
+                q = q.next
+            else:
+                q_val = 0  
+            cur.next =ListNode((p_val + q_val + carry)%10)
+            carry = (p_val + q_val + carry)/10 
+            cur = cur.next
+        if carry > 0:
+            cur.next = ListNode(carry)
+        return dummyhead.next
+                
         
             
             
