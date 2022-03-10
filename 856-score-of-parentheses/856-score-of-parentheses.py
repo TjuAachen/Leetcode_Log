@@ -1,21 +1,17 @@
-class Solution:
-    def scoreOfParentheses(self, s: str) -> int:
-        record = {}
+class Solution(object):
+    def scoreOfParentheses(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
         stack = []
-        for ind, char in enumerate(s):
+        res = 0
+        for char in s:
             if char == "(":
-                stack.append(ind)
+                stack.append(res)
+                res = 0
             else:
-                record[stack[-1]] = ind
+                res = stack[-1]+max(res<<1,1)
                 stack.pop()
-        def count(i,j):
-            if j - i == 1:
-                return 1
-            if record[i] == j:
-                return 2*count(i+1,j-1)
-            else:
-                return count(i,record[i])+count(record[i]+1,j)
-        return count(0,len(s)-1)
-            
-        
+        return res
         
