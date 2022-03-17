@@ -6,9 +6,9 @@ class Solution:
         s = list(str(sign*x))
         value = 0
         for index in range(len(s)-1,-1,-1):
-            if sign == -1 and  2**31 - value*10  >= int(s[index]):
+            if sign == -1 and  2147483648 - value*10  >= int(s[index]):
                 value = value*10 + int(s[index])
-            elif sign == 1 and   2**31-1-value*10 >= int(s[index]):
+            elif sign == 1 and   2147483647-value*10 >= int(s[index]):
                 value = value*10 + int(s[index])
             else:
                 return 0
