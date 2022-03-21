@@ -4,34 +4,25 @@ class Solution:
         sign = 1
         res = 0
         power = 1
-        flag = False
+        i = 0
         bound = 2147483648
-        for index,char in enumerate(s):
-            if index == 0:
-                if char == '-':
-                    sign = -1
-                    flag = True
-                elif char == '.':
-                    return 0
-                elif char == '+':
-                    sign = 1
-                    flag = True
-                elif (char > '9' or char <'0'):
-                    return 0                    
-            if flag and char == '.':
-                return sign*res
-            elif (char > '9' or char <'0') and flag and index>0:
-                return sign*res
-            if '0' <= char <= '9':
-                flag = True
-                if sign == 1 and bound-1-res*10>=int(char):
-                    res = res*10 + int(char)
-                elif sign == 1:
-                    return bound - 1
-                if sign == -1 and bound-res*10>=int(char):
-                    res = res*10 + int(char)
-                elif sign == -1:
-                    return -1*bound
+        if s=="":
+            return 0
+        if s[0] == '-':
+            sign = -1
+            i = 1
+        elif s[0] == '+':
+            sign = 1
+            i = 1
+        for char in s[i:]:
+            if char.isdigit():
+                res = 10*res + ord(char) - ord('0')
+            else:
+                break
+        if sign == -1:
+            return max(-res,-1*bound)
+        else:
+            return min(res,bound-1)
         return sign*res
                 
             
