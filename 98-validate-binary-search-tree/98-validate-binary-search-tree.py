@@ -1,27 +1,31 @@
 # Definition for a binary tree node.
-# class TreeNode(object):
+# class TreeNode:
 #     def __init__(self, val=0, left=None, right=None):
 #         self.val = val
 #         self.left = left
 #         self.right = right
-class Solution(object):
-    def isValidBST(self, root):
-        """
-        :type root: TreeNode
-        :rtype: bool
-        """
+class Solution:
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        def pushLeftBranch(p):
+            while(p != None):
+                stack.append(p)
+                p = p.left
         stack = []
-        result = True
-        def inorder(root):
-            if not root:
-                return True
-            if inorder(root.left):
-                if stack and stack[-1] >= root.val:
+        inorder = []
+        visited = dict()
+        pushLeftBranch(root)
+        while(stack):
+            p = stack[-1]
+            if(not p.left or p.left in visited):
+                cur = stack.pop()
+                visited[cur] = True
+                if inorder and inorder[-1] >= cur.val:
                     return False
-                stack.append(root.val)
-                if inorder(root.right):
-                    return True
-            return False
-        return inorder(root)
-            
+                inorder.append(cur.val)
+                pushLeftBranch(p.right)
+        return True
+                
+                
+        
+                
         
