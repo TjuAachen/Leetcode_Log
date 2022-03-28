@@ -22,8 +22,6 @@ class Solution:
             for i in adjacent[start]:
                 if i in adjacent:
                     traverse(i)
-                    if i in path and not hasCycle:
-                        del path[i]
             del path[start]
         for i in range(numCourses):
             if i in adjacent:
