@@ -1,7 +1,17 @@
-class Solution:
-    def maxProfit(self, prices: List[int]) -> int:
-        profit, max_price = 0, 0
-        for i in range(len(prices)-1, -1, -1):
-            max_price = max(prices[i],max_price)
-            profit = max(profit, max_price-prices[i])
-        return profit
+class Solution(object):
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        stack = []
+        res = 0
+        for price in prices:
+            if not stack:
+                stack.append(price)
+            while(stack and stack[-1] > price):
+                stack.pop()
+            stack.append(price)
+            res = max(res, stack[-1] - stack[0])
+        return res
+        
