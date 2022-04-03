@@ -1,23 +1,32 @@
-class Solution:
-    def nextPermutation(self, nums: List[int]) -> None:
+class Solution(object):
+    def nextPermutation(self, nums):
         """
-        Do not return anything, modify nums in-place instead.
+        :type nums: List[int]
+        :rtype: None Do not return anything, modify nums in-place instead.
         """
-        record = []
-        for i in range(len(nums)-1,-1,-1):
-            for j in range(i,-1,-1):
-                if nums[i] > nums[j]:
-                    if not record:
-                        record = [i,j]
-                    else:
-                        if record[1] < j:
-                            record = [i,j]
-                    break
-        if record:
-            nums[record[0]],nums[record[1]] = nums[record[1]],nums[record[0]]
-            nums[record[1]+1:] = sorted(nums[record[1]+1:])
-        else:
+        end = len(nums) - 1
+        pos = -10
+        for i in range(end, -1, -1):
+            if i == end:
+                prev = nums[end]
+            elif prev <= nums[i]:
+                prev = nums[i]
+            else:
+                j = i + 1
+                while(j <= end and nums[j] > nums[i]):
+                    j = j + 1
+                if j<= end and nums[j] > nums[i]:
+                    pos = j
+                else:
+                    pos = j - 1
+                break
+        if pos == -10:
             nums.sort()
+        else:
+            nums[i], nums[pos] = nums[pos], nums[i]
+            nums[i+1:] = sorted(nums[i+1:])
         
-        
+                
+            
+                
         
