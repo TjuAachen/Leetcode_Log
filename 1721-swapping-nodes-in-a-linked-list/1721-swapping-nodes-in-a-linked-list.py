@@ -7,14 +7,18 @@ class Solution:
     def swapNodes(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
         index = 1
         pre, cur = None, head
-        record = dict()
+        assist = None
         while(cur != None):
             if pre == None:
                 pre = cur    
             pre = cur
-            record[index] = cur
+            if assist != None:
+                assist = assist.next
+            if index == k:
+                first = cur
+                assist = head
             cur = cur.next
             index += 1
-        record[k].val, record[len(record) + 1-k].val = record[len(record) + 1-k].val, record[k].val
+        assist.val, first.val = first.val, assist.val
         return head
         
