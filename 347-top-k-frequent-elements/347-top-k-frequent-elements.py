@@ -1,28 +1,19 @@
 import heapq
-class Solution:
-    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-        num2freq = dict()
-        freq2num = dict()
-        freq = []
+class Solution(object):
+    def topKFrequent(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: List[int]
+        """
+        if len(nums) == k:
+            return nums
+        record = dict()
         for num in nums:
-            if num not in num2freq:
-                num2freq[num] = 1
+            if num not in record:
+                record[num] = 1
             else:
-                num2freq[num]+= 1
-        for key in num2freq.keys():
-            freqval = num2freq[key]
-            freq.append(freqval)
-            if freqval not in freq2num:
-                freq2num[freqval] = [key]
-            else:
-                freq2num[freqval].append(key)
-        heapq.heapify(freq)
-        res = heapq.nlargest(k,freq)
-        final = []
-        for ele in res:
-            final.append(freq2num[ele].pop())
-        return final
+                record[num] += 1
+        return heapq.nlargest(k, record.keys(),key=record.get)
             
-        
-                
         
