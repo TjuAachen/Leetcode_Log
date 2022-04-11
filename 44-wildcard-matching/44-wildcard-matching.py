@@ -15,23 +15,9 @@ class Solution:
             #termination conditions
             if (i,j) in record:
                 return record[(i,j)]
-            if i == len(s) and j == len(p):
-                record[(i,j)] = True
+            if (i == len(s) and j == len(p)) or (j==len(p)-1 and i==len(s) and p[j] == '*'):
                 return True
-            if i == len(s) and j< len(p) and not (sorted(p[j:])[0] == '*' and sorted(p[j:])[-1] == '*'):
-                record[(i,j)] = False
-                return False
-            elif i==len(s) and j < len(p):
-                record[(i,j)] = True
-                return True
-            if i == len(s) and j > len(p):
-                record[(i,j)] = False
-                return False
-            if i > len(s):
-                record[(i,j)] = False
-                return False
-            if i < len(s) and j >= len(p):
-                record[(i,j)] = False
+            if (i == len(s) or j == len(p)):
                 return False
             if p[j] == "?":
                 if (i+1,j+1) not in record:
