@@ -1,50 +1,30 @@
 # Definition for singly-linked list.
-# class ListNode:
+# class ListNode(object):
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
-class Solution:
-    def partition(self, head: Optional[ListNode], x: int) -> Optional[ListNode]:
-        pre, cur = None, head
-        sanitel = ListNode(0)
-        sanitel.next = head
-        less, larger = None, None
-        while(cur != None):
+class Solution(object):
+    def partition(self, head, x):
+        """
+        :type head: ListNode
+        :type x: int
+        :rtype: ListNode
+        """
+        large = ListNode()
+        small = ListNode()
+        l = large
+        s = small
+        cur = head
+        while cur:
             nxt = cur.next
             if cur.val < x:
-                if less == None:
-                    less = cur
-                    if not sanitel.next:
-                        sanitel.next = cur
-                    else:
-                        temp = sanitel.next
-                        sanitel.next = less
-                        if not larger:
-                            less.next = None
-                        else:
-                            less.next = temp                            
-                elif not less.next:
-                    less.next = cur
-                else:
-                    temp = less.next
-                    less.next = cur
-                    if not larger:
-                        cur.next = None
-                    else:
-                        cur.next = temp
-                less = cur
+                s.next = cur
+                s = s.next
             else:
-                if larger == None:
-                    larger = cur
-                    if less:
-                        less.next = larger
-                    else:
-                        sanitel.next = larger
-                    larger.next = None
-                else:
-                    larger.next = cur
-                    cur.next = None
-                    larger = cur
+                l.next = cur
+                l = l.next
             cur = nxt
-        return sanitel.next
-                
+        s.next = large.next
+        l.next = None
+        return small.next
+        
