@@ -1,26 +1,20 @@
-class Solution:
-    def getPermutation(self, n: int, k: int) -> str:
-        global count
-        count = 0
-        track = []
-        visited = dict()
-        def permutation(n):
-            global count
-            if len(track) == n:
-                count += 1
-                if count == k:
-                    return True
-                return False
-            for i in range(1,n+1):
-                if i not in visited:
-                    track.append(i)
-                    visited[i] = 1
-                    if permutation(n):
-                        return True
-                    del visited[i]
-                    track.pop()
-        permutation(n)
-        return ''.join([str(i) for i in track])
-        
-            
+import math
+class Solution(object):
+    def getPermutation(self, n, k):
+        """
+        :type n: int
+        :type k: int
+        :rtype: str
+        """
+        res = []
+        i = 1
+        available = [j+1 for j in range(n)]
+        while(len(res) < n):
+            factor = math.factorial(n-i)
+            num = available[(k-1) //factor]
+            available.remove(num)
+            k =  k%factor
+            res.append(num)
+            i = i + 1
+        return ''.join([str(i) for i in res])
         
