@@ -1,27 +1,13 @@
-class Solution(object):
-    def longestPalindromeSubseq(self, s):
-        """
-        :type s: str
-        :rtype: int
-        """
-        record = dict()
-        def count(s):
-            if s in record:
-                return record[s]
-            if len(s) <= 1:
-                record[s] = len(s)
-                return len(s)
-            for i in range(len(s)-1):
-                if s[i] == s[-1]:
-                    m1 = count(s[i+1:len(s)-1])
-                    m2 = count(s[:len(s)-1])
-                    if m1 == max(m1+2,m2):
-                        record[s[i+1:len(s)-1]] = m1 + 2
-                    else:
-                        record[s[:len(s)-1]] = m2
-                    record[s] = max(m1+2,m2)
-                    return record[s]
-            record[s] = count(s[:len(s)-1])
-            return record[s]
-        return count(s)
-                    
+class Solution:
+    def longestPalindromeSubseq(self, s: str) -> int:
+        n = len(s)
+        dp = [[0]*n for _ in range(n)]
+        for i in range(n-1,-1,-1):
+            for j in range(i,n):
+                if i == j:
+                    dp[i][j] = 1
+                if i!= j and s[i] == s[j]:
+                    dp[i][j] = dp[i+1][j-1]+2
+                elif i != j:
+                    dp[i][j] = max(dp[i+1][j],dp[i][j-1])
+        return dp[0][-1]
