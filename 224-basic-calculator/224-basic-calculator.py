@@ -1,43 +1,45 @@
-class Solution(object):
-    def calculate(self, s):
-        """
-        :type s: str
-        :rtype: int
-        """
-        s = list(s)
+class Solution:
+    def calculate(self, s: str) -> int:
+        cur = 0
         sym = 1
-        res = 0
-        num = 0
-        stack = []
-        for char in s:
-            if '0' <= char <= '9':
-                num = num*10 + int(char)
+        symbol = []
+        number = []
+        total = 0
+        n = len(s)
+        i = 0
+        while(i < n):
+            char = s[i]
+            if char == '(':
+                number.append(cur)
+                symbol.append(sym)
+                cur = 0
+                sym = 1
+                i = i + 1
+            elif char == ")":
+                cur = number.pop() + symbol.pop()*cur
+                i = i + 1
+            elif '0'<=char<='9':
+                integer = 0
+                while(i < n and '0' <= s[i] <= '9'):
+                    integer = integer*10+ int(s[i])
+                    i = i + 1
+                cur += sym*integer
             elif char == '+':
-                res = res + sym*num
                 sym = 1
-                num = 0
+                i = i + 1
             elif char == '-':
-                res = res + sym*num
                 sym = -1
-                num = 0
-            elif char == '(':
-                stack.append(res)
-                stack.append(sym)
-                res = 0
-                sym = 1
-                num = 0
-            elif char == ')':
-                res = sym*num + res
-                num = 0
-                sym = 1
-                sym_prev = stack.pop()
-                res_prev = stack.pop()
-                res = sym_prev*res + res_prev
-        return res+sym*num
-
+                i = i + 1
+            else:
+                i = i+1
+        return cur
+        
+        
                 
                 
-                
-                
-                
+            
+        
+                    
+                    
+                    
         
