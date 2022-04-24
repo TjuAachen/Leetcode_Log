@@ -38,10 +38,7 @@ class Solution:
                         newX, newY = i+dx, j+dy
                         newIndex = newX*ncol+newY
                         if board[newX][newY] == 'O':
-                            if newX == 0 or newX == nrow-1 or newY == 0 or newY == ncol - 1:
-                                union(index,nrow*ncol)
-                            else:
-                                union(index,newIndex)
+                            union(index,newIndex)
       #  print(F)
         for i in range(1,nrow-1):
             for j in range(1,ncol-1):
