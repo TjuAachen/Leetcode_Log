@@ -51,7 +51,7 @@ class PeekingIterator:
         """
         :rtype: bool
         """
-        return self.data.hasNext() or self.prev != None
+        return self.prev != None
             
         
 
