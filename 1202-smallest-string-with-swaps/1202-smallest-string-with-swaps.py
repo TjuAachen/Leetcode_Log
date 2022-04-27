@@ -1,42 +1,52 @@
-class Solution:
-    def smallestStringWithSwaps(self, s: str, pairs: List[List[int]]) -> str:
-        n = len(s)
-        parent = [i for i in range(n)]
-        size = [1]*n
-        def find(x):
-            while(x != parent[x]):
-                parent[x] = parent[parent[x]]
-                x = parent[x]
-            return x
-        def union(x,y):
-            rootx, rooty = find(x), find(y)
-            if rootx == rooty:
-                return
-            if rooty < rootx:
-                parent[rootx] = rooty
-                size[rooty] += size[rootx]
-            else:
-                parent[rooty] = rootx
-                size[rootx] += size[rooty]                
+class Solution(object):
+    def smallestStringWithSwaps(self, s, pairs):
+        """
+        :type s: str
+        :type pairs: List[List[int]]
+        :rtype: str
+        """
+        #build the graph
+        graph = dict()
         for pair in pairs:
             p1, p2 = pair[0], pair[1]
-            union(p1,p2)
-        region = dict()
-        for i in range(n):
-            root = find(i)
-            if root not in region:
-                region[root] = [i]
+            if p1 not in graph:
+                graph[p1] = [p2]
             else:
-                region[root].append(i)
+                graph[p1].append(p2)
+            if p2 not in graph:
+                graph[p2] = [p1]
+            else:
+                graph[p2].append(p1)
+        #dfs find the connected region
+        n = len(s)
+        visited = dict()
+        def dfs(vertex):
+            if vertex in visited:
+                return
+            visited[vertex] = 1
+            track.append(vertex)
+            if vertex in graph:
+                nxt = graph[vertex]
+            else:
+                nxt = []
+            for i in nxt:
+                dfs(i)
+            return
+        region = []
+        for i in range(n):
+            track = []
+            dfs(i)
+            if len(track) > 0:
+                track.sort()
+                region.append(track)
         s = list(s)
-        for key,val in region.items():
+        for conn in region:
             temp = []
-            for m in val:
+            for m in conn:
                 temp.append(s[m])
             temp.sort()
-            for i,m in enumerate(val):
+            for i, m in enumerate(conn):
                 s[m] = temp[i]
         return ''.join(s)
-            
         
-                
+        
