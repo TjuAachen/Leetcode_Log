@@ -1,7 +1,6 @@
 class Solution:
     def minimumEffortPath(self, heights: List[List[int]]) -> int:
         nrow, ncol = len(heights), len(heights[0])
-        max_value, min_value = max([max(heights[i]) for i in range(nrow)]), min([min(heights[i]) for i in range(nrow)])
         def check(val,i,j):
           #  print(val,i,j)
             if i == nrow-1 and j == ncol - 1:
