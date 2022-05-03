@@ -1,73 +1,76 @@
-class ListNode():
-    def __init__(self,val = 0,key=0):
-        self.val = val
+class Node:
+    def __init__(self,key=0,value=0):
+        self.val= value
         self.key = key
-        self.next = None
-        self.prev = None
-        self.tail = None
-class LRUCache(object):
+        self.prev=None
+        self.next=None
+        
+        
+        
+        
 
-    def __init__(self, capacity):
-        """
-        :type capacity: int
-        """
+class LRUCache:
+
+    def __init__(self, capacity: int):
+        self.head = Node(-1,-1)
+        self.tail = Node(-1,-1)
+        self.tail.prev = self.head
+        self.head.next = self.tail
+        self.capacity=capacity
         self.size = 0
-        self.head = ListNode(-1,-1)
-        self.hash = dict()
-        self.tail = self.head
-        self.capacity = capacity
-        
-    def putTail(self,key, node):
-        if key in self.hash and node != self.tail:
-            node.prev.next = node.next
-            node.next.prev = node.prev
-            node.prev = self.tail
-            self.tail.next = node
-            node.next = None
-            self.tail = node
-        elif key not in self.hash:
-            self.tail.next = node
-            node.prev = self.tail
-            node.next = None
-            self.tail = node
-    def get(self, key):
-        """
-        :type key: int
-        :rtype: int
-        """
-        if key in self.hash:
-            self.putTail(key,self.hash[key])
-            return self.hash[key].val
-        else:
+        self.dict_key=dict()
+    def get(self, key: int) -> int:
+        if key not in self.dict_key:
             return -1
+        node = self.dict_key[key]
+        self.makeRecently(node)
+        return node.val
+            
         
 
-    def put(self, key, value):
-        """
-        :type key: int
-        :type value: int
-        :rtype: None
-        """
-        if key in self.hash:
-            self.hash[key].val = value
-            self.putTail(key, self.hash[key])
+    def put(self, key: int, value: int) -> None:
+        if key in self.dict_key:
+            node = self.dict_key[key]
+            node.val = value
+            self.makeRecently(node)
         else:
+            node = Node(key,value)
+            self.dict_key[key] = node
             if self.size + 1 > self.capacity:
-                LRU = self.head.next
-                self.head.next = LRU.next
-                del self.hash[LRU.key]
-                if self.tail != LRU:
-                    LRU.next.prev = self.head
-                else:
-                    self.tail = self.head
-                node = ListNode(value,key)
-                self.putTail(key,node)
-                self.hash[key] = node
+                self.removeFirst()
+                self.addLast(node)
             else:
+                self.addLast(node)
                 self.size += 1
-                node = ListNode(value,key)
-                self.putTail(key, node)
-                self.hash[key] = node
+    def makeRecently(self,node):
+        prev = node.prev
+        nxt = node.next
+        prev.next = nxt
+        if nxt != None:
+            nxt.prev = prev
+        self.addLast(node)
+        
+    
+    def removeFirst(self):
+        first = self.head.next
+        self.head.next = first.next
+        if first.next:
+            first.next.prev = self.head
+        del self.dict_key[first.key]
+        
+        
+    def addLast(self,node):
+        prev = self.tail.prev
+        prev.next = node
+        node.prev = prev
+        self.tail.prev = node
+        node.next = self.tail
+              
+            
+            
+                
+                
+                
         
 
 
