@@ -11,27 +11,17 @@ class Solution:
                 data[user].append(website[ind])
             else:
                 data[user] = [website[ind]]
-        def find(vocab,key):
-            return any([vocab in data[user] for user in data.keys() if user!= key])
-        def compare(vocab,i):
-            return any([vocab > pattern[i] for pattern in record.keys()])         
-        global mv
-        mv = 0
         def store(start):
-            global mv
             if len(track) == 3 and tuple(track) not in visited:
                 if tuple(track) not in record:
                     record[tuple(track)] = 1
-                    mv = 1
                 else:
                     record[tuple(track)] += 1
-                    mv = 2
                 visited[tuple(track)] = 1
                 return
             elif len(track) == 3:
                 return
             for i in range(start,length):
- #               res1, res2 = find(pattern[i],key), compare(pattern[i],max(len(track)-1,0))
                 track.append(pattern[i])
                 store(i+1)
                 track.pop()
