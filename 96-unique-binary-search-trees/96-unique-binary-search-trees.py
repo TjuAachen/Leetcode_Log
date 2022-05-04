@@ -1,14 +1,16 @@
-class Solution:
-    def numTrees(self, n: int) -> int:
-        memo = dict()
-        def backtracking(n):
-            count = 0
-            if n <= 1:
-                return 1
-            if n in memo:
-                return memo[n]
-            for index in range(n):
-                count += backtracking(n-index-1)*backtracking(index)
-            memo[n] = count
-            return count
-        return backtracking(n)
+class Solution(object):
+    def numTrees(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        dp = [0]*(n+1)
+        dp[0] = 1
+        for i in range(1,n+1):
+            if i == 1:
+                dp[i] = 1
+            else:
+                for j in range(1,i+1):
+                    dp[i] += dp[j-1] * dp[i-j]
+        return dp[n]
+        
