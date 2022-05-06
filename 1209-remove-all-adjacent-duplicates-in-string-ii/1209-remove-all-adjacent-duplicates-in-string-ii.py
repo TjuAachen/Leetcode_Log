@@ -5,18 +5,23 @@ class Solution(object):
         :type k: int
         :rtype: str
         """
-        count = [0]*len(s)
-        i = 0
-        while(i < len(s)):
-            if(i == 0 or s[i] != s[i-1]):
-                count[i] = 1
+        n = len(s)
+        count = []
+        slow = 0
+        s = list(s)
+        for fast in range(n):
+            s[slow] = s[fast]
+            if(slow == 0 or s[slow] != s[slow-1]):
+                count.append(1)
             else:
-                count[i] = count[i-1] + 1
-                if count[i] == k:
-                    s = s[:i-k+1] + s[i+1:]
-                    i = i - k
-            i += 1
-        return s
+                count[-1] += 1
+                if count[-1] == k:
+                    count.pop()
+                    slow = slow - k
+            slow += 1
+        return ''.join(s[:slow])
+            
+            
         
             
         
