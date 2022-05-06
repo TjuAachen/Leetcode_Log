@@ -1,27 +1,23 @@
-class Solution:
-    
-    #question to clarity
-    def removeDuplicates(self, s: str, k: int) -> str:
-        stack = []
+class Solution(object):
+    def removeDuplicates(self, s, k):
+        """
+        :type s: str
+        :type k: int
+        :rtype: str
+        """
+        count = [0]*len(s)
         i = 0
-        cur = -1
-        #i is current position
         while(i < len(s)):
-            stack.append(s[i])
+            if(i == 0 or s[i] != s[i-1]):
+                count[i] = 1
+            else:
+                count[i] = count[i-1] + 1
+                if count[i] == k:
+                    s = s[:i-k+1] + s[i+1:]
+                    i = i - k
             i += 1
-            cur += 1
-            while cur >= k - 1 and stack[cur] == stack[cur-k+1]:
-                is_delete = True
-                for j in range(cur-k+1,cur+1):
-                    if stack[j] != stack[cur-k+1]:
-                        is_delete = False
-                        break
-                if is_delete:
-                    stack = stack[:(cur-k+1)]
-                    cur = cur - k
-                else:
-                    break
-        return ''.join(stack)
-                
+        return s
+        
             
+        
         
