@@ -1,31 +1,43 @@
-class Solution:
-    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        adjacent = dict()
-        for pre in prerequisites:
-            if pre[1] not in adjacent:
-                adjacent[pre[1]] = [pre[0]]
-            else:
-                adjacent[pre[1]].append(pre[0])
-        path = dict()
+class Solution(object):
+    def canFinish(self, numCourses, prerequisites):
+        """
+        :type numCourses: int
+        :type prerequisites: List[List[int]]
+        :rtype: bool
+        """
+        record = dict()
+        result = dict()
         visited = dict()
-        global hasCycle
-        hasCycle = False
-        def traverse(start):
-            global hasCycle
-            if start in path:
-                hasCycle = True
-                return
-            if hasCycle or start in visited:
-                return
-            path[start] = True
-            visited[start] = True
-            for i in adjacent[start]:
-                if i in adjacent:
-                    traverse(i)
-            del path[start]
-        for i in range(numCourses):
-            if i in adjacent:
-                traverse(i)
-        return (not hasCycle)
+        for pre in prerequisites:
+            a, b = pre
+            if a not in record:
+                record[a] = [b]
+            else:
+                record[a].append(b)
+        def find(start):
+            if start in result:
+                return result[start]
+            
+            if start not in record:
+                result[start] = True
+                return True
+            
+            for pre in record[start]:
+                if start == pre or pre in visited:
+                    result[pre] = False
+                    return False
+                visited[pre] = 1
+                if not find(pre):
+                    return False
+                del visited[pre]
+            result[start] = True
+            return result[start] 
+        for course in range(numCourses):
+            if not find(course):
+                return False
+        return True
+            
+                
+                
             
         
