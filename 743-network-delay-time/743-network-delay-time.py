@@ -21,11 +21,9 @@ class Solution:
                 if popped not in direction:
                     continue
                 for nxt,distance in direction[popped]:
-                    if nxt in result and result[nxt] <= result[popped] + distance:
-                        continue
-                    else:
+                    if nxt not in result or result[nxt] > result[popped] + distance:
                         result[nxt] = result[popped] + distance
-                        queue.append([nxt,result[nxt]])
+                        heappush(queue,[nxt,result[nxt]])
         if len(result) == n:
             return max([i for i in result.values()])
         return -1
