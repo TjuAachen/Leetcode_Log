@@ -1,4 +1,4 @@
-from collections import deque
+from heapq import *
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
         direction = dict()
@@ -13,15 +13,14 @@ class Solution:
                 direction[source] = [target]
             if (source,target) not in weight:
                 weight[(source,target)] = w
-        global temp
-        temp = 0
-        queue = deque()
-        queue.append(k)
+        queue = []
+        heapify(queue)
+        heappush(queue,[k,0])
         result[k] = 0
         while(queue):
             size = len(queue)
             for i in range(size):
-                popped = queue.popleft()
+                popped,_ = heappop(queue)
                 if popped not in direction:
                     continue
                 for nxt in direction[popped]:
@@ -30,7 +29,7 @@ class Solution:
                         continue
                     else:
                         result[nxt] = result[popped] + distance
-                        queue.append(nxt)
+                        queue.append([nxt,result[nxt]])
         if len(result) == n:
             return max([i for i in result.values()])
         return -1
