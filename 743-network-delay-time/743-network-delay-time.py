@@ -2,16 +2,14 @@ from heapq import *
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
         direction = dict()
-        weight = dict()
         result = dict()
         for time in times:
             source, target, w = time
             if source in direction:
-                direction[source].append(target)
+                direction[source].append([target,w])
             else:
-                direction[source] = [target]
-            if (source,target) not in weight:
-                weight[(source,target)] = w
+                direction[source] = [[target,w]]
+
         queue = []
         heapify(queue)
         heappush(queue,[k,0])
@@ -22,8 +20,7 @@ class Solution:
                 popped,_ = heappop(queue)
                 if popped not in direction:
                     continue
-                for nxt in direction[popped]:
-                    distance = weight[(popped,nxt)]
+                for nxt,distance in direction[popped]:
                     if nxt in result and result[nxt] <= result[popped] + distance:
                         continue
                     else:
