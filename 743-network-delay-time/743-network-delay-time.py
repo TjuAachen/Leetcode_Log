@@ -3,7 +3,6 @@ class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
         direction = dict()
         weight = dict()
-        visited = dict()
         result = dict()
         for time in times:
             source, target, w = time
