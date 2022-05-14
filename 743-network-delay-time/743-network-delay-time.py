@@ -12,18 +12,18 @@ class Solution:
 
         queue = []
         heapify(queue)
-        heappush(queue,[k,0])
+        heappush(queue,[0,k])
         result[k] = 0
         while(queue):
             size = len(queue)
             for i in range(size):
-                popped,_ = heappop(queue)
+                _,popped = heappop(queue)
                 if popped not in direction:
                     continue
                 for nxt,distance in direction[popped]:
                     if nxt not in result or result[nxt] > result[popped] + distance:
                         result[nxt] = result[popped] + distance
-                        heappush(queue,[nxt,result[nxt]])
+                        heappush(queue,[result[nxt],nxt])
         if len(result) == n:
             return max([i for i in result.values()])
         return -1
