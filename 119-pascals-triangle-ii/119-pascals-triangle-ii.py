@@ -1,13 +1,11 @@
 class Solution:
     def getRow(self, rowIndex: int) -> List[int]:
-        prev, cur = [], []
+        cur = [0 for _ in range(rowIndex+1)]
         for row in range(rowIndex+1):
-            cur = []
-            for i in range(1+row):
+            for i in range(row,-1,-1):
                 if i == 0 or i == row:
-                    cur.append(1)
+                    cur[i] = 1
                 else:
-                    cur.append(prev[i-1]+prev[i])
-            prev = cur[:]
+                    cur[i] += cur[i-1]
         return cur
         
