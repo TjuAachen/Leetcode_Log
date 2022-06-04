@@ -1,50 +1,36 @@
-class Solution(object):
-    def solveNQueens(self, n):
-        """
-        :type n: int
-        :rtype: List[List[str]]
-        """
-        def check(chess,nrow,ncol):
-            rcount, ccount = 0, 0
-            for i in chess[nrow]:
-                if i == "Q":
-                    rcount += 1
-            if rcount > 1:
-                return False
-            for i in range(n):
-                if chess[i][ncol] == "Q":
-                    ccount += 1
-            if ccount > 1:
-                return False
-            diff = ncol - nrow
-            add = ncol + nrow
-            ldiag, rdiag = 0, 0
-            for i in range(n):
-                newr1, newc1 = i, i+diff
-                newr2, newc2 = i, add - i
-                if 0 <= newc1 < n and chess[newr1][newc1] == "Q":
-                    ldiag += 1
-                if 0<= newc2 < n and chess[newr2][newc2] == "Q":
-                    rdiag += 1
-            if ldiag > 1 or rdiag > 1:
-                return False
+class Solution:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        global res, final
+        def check(res, r_selected, c_selected):
+            #same col
+            for row in range(r_selected):
+                if res[row][c_selected] == 'Q':
+                    return False
+            
+            #diagonal
+            sum_cor, diff_cor = r_selected - c_selected, r_selected + c_selected
+            for row in range(n):
+                col_sum, col_diff = row - sum_cor, diff_cor - row
+                if 0 <= col_sum < n and res[row][col_sum] == 'Q':
+                    return False
+                if 0 <= col_diff < n and res[row][col_diff] == 'Q':
+                    return False
             return True
-        total = []
-        chess = [['.']*n for i in range(n)]
-        def backtracking(nrow):
-            if nrow == n:
-                res = [['.']*n for i in range(n)]
-                for i,row in enumerate(chess):
-                    res[i] = ''.join(row)
-                total.append(res[:])
+        global res,final
+        final = []
+        res =[['.']*n for _ in range(n)]
+        def dfs(step):
+            global res,final
+            if step == n:
+                temp = [''.join(row) for row in res]
+                final.append(temp)
                 return
-            for ncol in range(n):
-                chess[nrow][ncol] = 'Q'
-                if check(chess, nrow, ncol):
-                    backtracking(nrow + 1)
-                chess[nrow][ncol] = '.'
-        backtracking(0)
-        return total
-        
-                
+            for col in range(n):
+                if not check(res, step, col):
+                    continue
+                res[step][col] = 'Q'
+                dfs(step + 1)
+                res[step][col] = '.'
+        dfs(0)
+        return final
         
