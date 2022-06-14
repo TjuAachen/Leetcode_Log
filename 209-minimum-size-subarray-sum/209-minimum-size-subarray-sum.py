@@ -10,13 +10,11 @@ class Solution:
         #right is exclusive
         while(right < nums_len):
             cur_sum += nums[right]
+            right += 1
             while(left < right and cur_sum >= target):
                 cur_sum = cur_sum - nums[left]
-                min_length = min(min_length, right - left + 1)
+                min_length = min(min_length, right - left)
                 left = left + 1
-            if cur_sum >= target:
-                min_length = min(min_length, right - left + 1)
-            right += 1
         if min_length == float('inf'):
             return 0
         return min_length
