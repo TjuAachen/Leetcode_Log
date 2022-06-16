@@ -1,24 +1,41 @@
-class Solution(object):
-    def longestPalindrome(self, s):
-        """
-        :type s: str
-        :rtype: str
-        """
-        n = len(s)
-        dp = [[True]*n for _ in range(n)]
-        result = [0,0]
-        for i in range(n-1,-1,-1):
-            for j in range(i,n):
-                if i >= j:
-                    dp[i][j] = True
-                elif s[i] == s[j]:
-                    dp[i][j] = dp[i+1][j-1]
-                else:
-                    dp[i][j] = False
-                if dp[i][j] and result[1] - result[0] < j - i:
-                    result = [i, j]
-        return s[result[0]:result[1]+1]
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        #preprocessing
+        s_length = len(s)
+        s_post = []
+        for i, char in enumerate(s):
+            s_post.append('#')
+            s_post.append(char)
+        s_post.append('#')
+        newS_length = len(s_post)
+        
+        maxRight, center = 0, 0
+        i = 0
+        maxLen = 0
+        p = [0] * newS_length
+        while(i < newS_length):
+            if i <= maxRight:
+                mirror = 2 * center - i
+                p[i] = min(p[mirror], maxRight - i)
+            left = i - p[i] - 1
+            right = i + p[i] + 1
+            while(left >= 0 and right < newS_length and s_post[left] == s_post[right]):
+                left = left - 1
+                right += 1
+                p[i] += 1
+                
+            #update maxRight
+            if i + p[i] > maxRight:
+                maxRight = i + p[i]
+                center = i
+            
+            if p[i] > maxLen:
+                maxLen = p[i]
+                start = (i - maxLen) // 2
+            i = i + 1
+        return s[start:start+maxLen]
+        
+    
                     
         
             
-        
