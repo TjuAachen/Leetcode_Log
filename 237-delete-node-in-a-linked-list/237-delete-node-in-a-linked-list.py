@@ -10,13 +10,11 @@ class Solution:
         :type node: ListNode
         :rtype: void Do not return anything, modify node in-place instead.
         """
-        def replace_val(node):
-            if not node:
-                return
+        while(node):
             node.val = node.next.val
             if not node.next.next:
                 node.next = None
-            replace_val(node.next)
-        replace_val(node)
+            
+            node = node.next
             
         
