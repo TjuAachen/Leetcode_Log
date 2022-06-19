@@ -1,35 +1,35 @@
-class WordFilter:
+class WordFilter(object):
 
-    def __init__(self, words: List[str]):
-        self.record = dict()
-        self.result = dict()
+    def __init__(self, words):
+        """
+        :type words: List[str]
+        """
+        self.trie = dict()
+        KEY = '$'
         for ind, word in enumerate(words):
-            if word in self.record:
-                self.record[word] = max(self.record[word], ind)
+            n = len(word)
+            for i in range(n, -1, -1):
+                suffix = word[i:]
+                new_word = suffix + '#' + word
+                cur = self.trie
+                cur[KEY] = ind
+                for letter in new_word:
+                    cur = cur.setdefault(letter, {})
+                    cur[KEY] = ind
+                
+    def f(self, prefix, suffix):
+        cur = self.trie
+        for letter in suffix + '#' + prefix:
+            if letter not in cur:
+                return -1
             else:
-                self.record[word] = ind
-            self.modify(word, ind)    
-    def f(self, prefix: str, suffix: str) -> int:
-        
-        if (prefix, suffix) in self.result:
-            return self.result[(prefix, suffix)]
-        rolling_index = -1
-        if (prefix, suffix) in self.record:
-            rolling_index = self.record[(prefix, suffix)]
-        self.result[(prefix, suffix)] = rolling_index
-        return rolling_index
-        
-    def modify(self, word, index):
-        n = len(word)
-        
-        for ind_i in range(n):
-            for ind_j in range(n-1, -1, -1):
-                remaining = 10 - n + ind_j - ind_i - 1
-                prefix, suffix = word[:ind_i+1], word[ind_j:]
-                if (prefix, suffix) in self.record:
-                    self.record[(prefix, suffix)] = max(self.record[(prefix, suffix)], index)
-                else:
-                    self.record[(prefix, suffix)] = index
+                cur = cur[letter]
+        return cur['$']
+        """
+        :type prefix: str
+        :type suffix: str
+        :rtype: int
+        """
         
 
 
