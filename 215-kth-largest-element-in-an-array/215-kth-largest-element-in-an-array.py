@@ -1,24 +1,28 @@
-import random
-
-class Solution:
-    def findKthLargest(self, nums: List[int], k: int) -> int:
-        def partition(nums, k):
-            n = len(nums)
-            pivot=random.randint(0, n-1)
-            nums[-1], nums[pivot] = nums[pivot], nums[-1]
-            j = 0
-            for i in range(len(nums)-1):
-                if nums[i] <= nums[-1]:
+class Solution(object):
+    def findKthLargest(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+        nums_len = len(nums)
+        def quickSelect(l, r, pivot):
+            j = l
+            for i in range(l, r + 1):
+                if nums[i] <= nums[pivot]:
                     nums[i], nums[j] = nums[j], nums[i]
                     j = j + 1
-            if j <n- k :
-                return partition(nums[j:len(nums)-1],k)
-            elif j >n- k:
-                k = j - n + k 
-                return partition(nums[:j],k)
+            nums[j], nums[pivot] = nums[pivot], nums[j]
+            return j
+        def find(l, r):
+            if l == r == nums_len - k:
+                return nums[l]
+            newPivot = quickSelect(l,r-1, r)
+            if newPivot == nums_len - k:
+                return nums[newPivot]
+            elif newPivot > nums_len - k:
+                return find(l, newPivot - 1)
             else:
-                return nums[-1]
-        return partition(nums, k)
-                
-            
-            
+                return find(newPivot+1, r)
+        return find(0, len(nums) - 1)
+        
