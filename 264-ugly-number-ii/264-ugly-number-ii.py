@@ -1,24 +1,20 @@
-from heapq import *
 class Solution:
     def nthUglyNumber(self, n: int) -> int:
-        uglyNums = []
-        heap = []
-        heapify(heap)
-        exponent_num = 0
-        cur_minimum = 2**exponent_num
-        while(len(heap) < n or (-heap[0] > cur_minimum)):
-            #generate ugly nums
-            for i in range(exponent_num+1):
-                for j in range(exponent_num + 1- i):
-                    cur = 2**i * 3**j * 5**(exponent_num-i-j)
-                    if len(heap) < n:
-                        heappush(heap, -cur)
-                    elif -heap[0] > cur:
-                        heapreplace(heap, -cur)
-            exponent_num += 1
-            cur_minimum = 2**exponent_num
-        return -heap[0]
-                
+        uglyNums = [1]
+        p2,p3,p5 = 0, 0, 0
+        cur_maximum = uglyNums[0]
+        while(len(uglyNums) < n):
+            candidate1, candidate2, candidate3 = 2*uglyNums[p2], uglyNums[p3] * 3, 5 * uglyNums[p5]
+            cur_maximum = min([candidate1, candidate2, candidate3])
+            #find the critical point for pointer of 2 when 2*index > cur_maximum
+            uglyNums.append(cur_maximum)
+            while(2*uglyNums[p2] <= cur_maximum):
+                p2 += 1
+            while(3*uglyNums[p3] <= cur_maximum):
+                p3 += 1            
+            while(5*uglyNums[p5] <= cur_maximum):
+                p5 += 1
+        return uglyNums[-1]
         
                 
         
