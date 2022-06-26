@@ -39,7 +39,7 @@ class Solution:
                 if upper in visited:
                     continue
                 degree[upper] -= 1
-                if degree[upper] == 1:
+                if degree[upper] == 1 and len(visited) != 1:
                     visited[upper] = 1
                     queue.append(upper)
                 trace[upper].add(popped)
