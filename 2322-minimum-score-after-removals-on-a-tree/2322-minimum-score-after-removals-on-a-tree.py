@@ -1,76 +1,72 @@
 from collections import deque
+from collections import defaultdict
+
 class Solution:
     def minimumScore(self, nums: List[int], edges: List[List[int]]) -> int:
         #for tree
         n = len(nums)
-        graph = dict()
-        trace = dict()
+        graph = defaultdict(list)
         degree = [0] * n
-        xor = dict()
         #graph generation
         for p1, p2 in edges:
             degree[p1] += 1
             degree[p2] += 1
-            if p1 not in graph:
-                graph[p1] = [p2]
-            else:
-                graph[p1].append(p2)
-            if p2 not in graph:
-                graph[p2] = [p1]
-            else:
-                graph[p2].append(p1)   
+            graph[p1].append(p2)
+            graph[p2].append(p1)   
         
         #bfs
+        xor = {}
+        child = defaultdict(set)
         queue = deque()
-        visited = {}
+        seen = set()
         total = 0
-        total_set = set()
         for i in range(n):
             xor[i] = nums[i]
-            trace[i] = set()
             total ^= nums[i]
-            total_set.add(i)
             if degree[i] == 1:
                 queue.append(i)
-                visited[i] = 1
+                seen.add(i)
+                
+                
         while(queue):
             popped = queue.popleft()
-            for upper in graph[popped]:
-                if upper in visited:
+            for nxt in graph[popped]:
+                if nxt in seen:
                     continue
-                degree[upper] -= 1
-                if degree[upper] == 1 and len(visited) != 1:
-                    visited[upper] = 1
-                    queue.append(upper)
-                trace[upper].add(popped)
-                trace[upper] |= trace[popped]
-                xor[upper] ^= xor[popped]
-        res = float('inf')
+                degree[nxt] -= 1
+                child[nxt].add(popped)
+                child[nxt] |= child[popped]
+                xor[nxt] ^= xor[popped]
+                if degree[nxt] == 1 and len(seen) != n:
+                    seen.add(nxt)
+                    queue.append(nxt)
+        ans = float('inf')
         for i in range(n-1):
             for j in range(i+1, n - 1):
                 p1, p2 = edges[i]
                 p3, p4 = edges[j]
-                if p2 in trace[p1]: 
-                    p1, p2 = p2, p1
-                if p4 in trace[p3]: 
-                    p3, p4 = p4, p3
-                if p3 in trace[p1]:
-                    left = xor[p3]
-                    right = xor[p1] ^ left
-                    middle = total ^ xor[p1]
-                elif p1 in trace[p3]:
+                if p2 in child[p1]: p1, p2 = p2, p1
+                if p4 in child[p3]: p3, p4 = p4, p3
+                
+                if p1 in child[p3]:
                     left = xor[p1]
-                    right = xor[p3] ^ left
-                    middle = total^xor[p3]
+                    right = total^xor[p3]
+                    middle = xor[p3] ^ left
+                elif p3 in child[p1]:
+                    left = xor[p3]
+                    right = total^xor[p1]
+                    middle = xor[p1] ^ left
                 else:
                     left = xor[p1]
                     right = xor[p3]
                     middle = total^left^right
-                cur = max([left,right,middle]) - min([left, right,middle])
-                res = min(res, cur)
-                if res == 0:
+                cur = max([left,middle,right]) - min([left, right,middle])
+                ans = min(cur, ans)
+                if ans == 0:
                     return 0
-        return res
+        return ans
+                
+                
                     
                         
         
