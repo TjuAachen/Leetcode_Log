@@ -1,47 +1,59 @@
-class Solution:
-    def addOperators(self, num: 'str', target: 'int') -> 'List[str]':
 
+class Solution(object):
+    def addOperators(self, num, target):
+        """
+        :type num: str
+        :type target: int
+        :rtype: List[str]
+        """
+        if int(num) < target:
+            return []
         N = len(num)
-        answers = []
-        def recurse(index, prev_operand, current_operand, value, string):
-
-            # Done processing all the digits in num
+        res = []
+        
+        def recurse(index, pre_operand, cur_operand, value, string):
             if index == N:
-
-                # If the final value == target expected AND
-                # no operand is left unprocessed
-                if value == target and current_operand == 0:
-                    answers.append("".join(string[1:]))
+                if target == value and cur_operand == 0:
+                    res.append(''.join(string[1:]))
                 return
-
-            # Extending the current operand by one digit
-            current_operand = current_operand*10 + int(num[index])
-            str_op = str(current_operand)
-
-            # To avoid cases where we have 1 + 05 or 1 * 05 since 05 won't be a
-            # valid operand. Hence this check
-            if current_operand > 0:
-
-                # NO OP recursion
-                recurse(index + 1, prev_operand, current_operand, value, string)
-
-            # ADDITION
-            string.append('+'); string.append(str_op)
-            recurse(index + 1, current_operand, 0, value + current_operand, string)
-            string.pop();string.pop()
-
-            # Can subtract or multiply only if there are some previous operands
+            #
+            cur_operand = 10*cur_operand + int(num[index])
+            str_ops = str(cur_operand)
+            #avoid 05, No operations
+            if cur_operand > 0:
+                recurse(index + 1, pre_operand, cur_operand, value,string)
+            
+            #set the end for the current operand and implement the operation
+            #addition
+            string.append('+')
+            string.append(str_ops)
+            recurse(index + 1, cur_operand, 0, value + cur_operand, string)
+            string.pop()
+            string.pop()
             if string:
+                #subtraction
+                string.append('-')
+                string.append(str_ops)
+                recurse(index + 1, -cur_operand, 0, value - cur_operand, string)
+                string.pop()
+                string.pop()     
+                
+                #multiplication
+                string.append('*')
+                string.append(str_ops)
+                recurse(index + 1, cur_operand*pre_operand, 0, value - pre_operand + pre_operand*cur_operand, string)
+                string.pop()
+                string.pop()   
+        recurse(0,0,0,0,[])
+        return res
+    
 
-                # SUBTRACTION
-                string.append('-'); string.append(str_op)
-                recurse(index + 1, -current_operand, 0, value - current_operand, string)
-                string.pop();string.pop()
-
-                # MULTIPLICATION
-                string.append('*'); string.append(str_op)
-                recurse(index + 1, current_operand * prev_operand, 0, value - prev_operand + (current_operand * prev_operand), string)
-                string.pop();string.pop()
-        recurse(0, 0, 0, 0, [])    
-        return answers
+                    
+        
+        
+        
+        
+                    
+            
+        
         
