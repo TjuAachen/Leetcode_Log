@@ -3,27 +3,38 @@ class Solution:
     def minCostII(self, costs: List[List[int]]) -> int:
         n = len(costs)
         k = len(costs[0])
-        dp = [[float('inf') for _ in range(k)] for _ in range(n)]
-        #except k, the minimum cost
-        temp = costs[0][:]
-        heapify(temp)
-        for i in range(k):
-            if costs[0][i] == temp[0]:
-                popped = heappop(temp)
-                dp[0][i] = temp[0]
-                heappush(temp,popped)
-            else:
-                dp[0][i] = temp[0]
+        #find the min and second_min in the previous row
+        prev_min_cost = prev_second_min_cost = prev_min_color = None
+        for ind, elem in enumerate(costs[0]):
+            if prev_min_cost is None or elem < prev_min_cost:
+                prev_second_min_cost = prev_min_cost
+                prev_min_cost = elem
+                prev_min_color = ind
+                
+            elif (not prev_second_min_cost or elem < prev_second_min_cost):
+                prev_second_min_cost = elem
         
-        for i in range(1,n):
-            temp = [dp[i-1][j] + costs[i][j] for j in range(k)]
-            heapify(temp)
-            for j in range(k):
-                if dp[i-1][j] + costs[i][j] == temp[0]:
-                    popped = heappop(temp)
-                    dp[i][j] = temp[0]
-                    heappush(temp,popped)
+        for house in range(1, n):
+            min_cost = second_min_cost = min_color = None
+            for color in range(k):
+                cost = costs[house][color]
+                if color == prev_min_color:
+                    cost += prev_second_min_cost
                 else:
-                    dp[i][j] = temp[0]
+                    cost += prev_min_cost
+                if not min_cost or cost < min_cost:
+                    second_min_cost = min_cost
+                    min_cost = cost
+                    min_color = color
+                    
+                elif not second_min_cost or cost < second_min_cost:
+                    second_min_cost = cost
+            prev_min_cost = min_cost
+            prev_min_color = min_color
+            prev_second_min_cost = second_min_cost
+        return prev_min_cost
+                    
+                    
             
-        return min(dp[-1])
+                
+        
