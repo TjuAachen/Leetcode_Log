@@ -1,37 +1,13 @@
-from heapq import *
-class Solution(object):
-    def candy(self, ratings):
-        """
-        :type ratings: List[int]
-        :rtype: int
-        """
-        num = len(ratings)
-        minimum = num
-        count = [0] * num
-        heap = []
-        heapify(heap)
-        for i, rating in enumerate(ratings):
-            heappush(heap, [rating, i])
-        seen = {}
-        layer = 0
-        prev = None
-        while(heap):
-            popped, index = heappop(heap)
-            if index in seen:
-                continue
-            else:
-                seen[index] = 1
-                left, right = 0, 0
-                if index + 1 in seen and ratings[index + 1] < popped:
-                    right = count[index + 1] + 1
-                if index - 1 in seen and ratings[index - 1] < popped:
-                    left = count[index - 1] + 1
-                count[index] = max([left, right, layer])
-            if prev and prev < popped:
-                layer += 1
-        return sum(count) + minimum
+class Solution:
+    def candy(self, ratings: List[int]) -> int:
+        n=len(ratings)
+        dp=[1]*n
+        for i in range(1,n):
+            if ratings[i]>ratings[i-1]:
+                dp[i]=dp[i-1]+1
+        for i in range(n-2,-1,-1):
+            if ratings[i]>ratings[i+1]:
+                dp[i]=max(dp[i+1]+1,dp[i])
             
-            
-        
-            
+        return sum(dp)
         
