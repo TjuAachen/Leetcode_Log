@@ -6,7 +6,8 @@ class Solution:
         j = 0
         for i, num in enumerate(nums):
             if num != 0:
-                nums[i], nums[j] = nums[j], nums[i]
+                if i != j:
+                    nums[i], nums[j] = nums[j], nums[i]
                 j = j+1
         
                 
