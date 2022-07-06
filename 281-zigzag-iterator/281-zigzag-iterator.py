@@ -6,42 +6,35 @@ class ZigzagIterator(object):
         :type v1: List[int]
         :type v2: List[int]
         """
-        self.n1, self.n2 = len(v1), len(v2)
-        self.v1 = v1
-        self.v2 = v2
-        self.p1, self.p2 = 0, 0
-        self.order = 0
+        self.vectors = [v1, v2]
+        self.queue = deque()
+        for index, vector in enumerate(self.vectors):
+            if len(vector) > 0:
+                self.queue.append((index,0))
+        
     def next(self):
         """
         :rtype: int
         """
-        if self.hasNext():
-            if self.p1 < self.n1 and self.order%2 == 0:
-                res = self.v1[self.p1]
-                self.p1 += 1
-                self.order = 1
-            elif self.p2 < self.n2 and self.order%2 == 1:
-                res = self.v2[self.p2]
-                self.p2 += 1
-                self.order = 0
-            elif self.p1 < self.n1 and self.p2 == self.n2:
-                res = self.v1[self.p1]
-                self.p1 += 1
-                self.order = 1
-            elif self.p2 < self.n2 and self.p1 == self.n1:
-                res = self.v2[self.p2]
-                self.p2 += 1
-                self.order = 0
-            return res
+        res = None
+        if self.queue:
+            cur_vec_ind, cur_elem_ind = self.queue.popleft()
+            res = self.vectors[cur_vec_ind][cur_elem_ind]
+            if cur_elem_ind + 1< len(self.vectors[cur_vec_ind]):
+                cur_elem_ind += 1
+                self.queue.append((cur_vec_ind, cur_elem_ind))
+        return res
+        
             
 
     def hasNext(self):
         """
         :rtype: bool
         """
-        if self.p1 < self.n1  or self.p2 < self.n2:
+        if self.queue:
             return True
         return False
+        
         
 
 # Your ZigzagIterator object will be instantiated and called as such:
