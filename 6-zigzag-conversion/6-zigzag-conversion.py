@@ -5,21 +5,21 @@ class Solution(object):
         :type numRows: int
         :rtype: str
         """
-        if numRows == 1:
-            return s
-        res = [[] for _ in range(numRows)]
-        for index, char in enumerate(s):
-            if index%(2*(numRows-1)) == 0:
-                res[0].append(char)
-            else:
-                row_number = index%(2*(numRows-1))
-                if row_number > numRows - 1:
-                    row_number = 2*(numRows-1) - row_number
-                res[row_number].append(char)
-        total = ''
-        for row in res:
-            total += ''.join(row)
-        return total
+        res = defaultdict(list)
+        numList = [i for i in range(numRows)]
+        numList_reversed = numList[::-1]
+        numList = numList + numList_reversed[1:-1]
+        queue = deque(numList)
+        for char in s:
+            popped = queue.popleft()
+            res[popped].append(char)
+            queue.append(popped)
+        result = ''
+        for i in range(numRows):
+            result += ''.join(res[i])
+        return result
+            
+        
             
             
             
