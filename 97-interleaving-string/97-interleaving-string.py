@@ -1,38 +1,23 @@
-class Solution(object):
-    def isInterleave(self, s1, s2, s3):
-        """
-        :type s1: str
-        :type s2: str
-        :type s3: str
-        :rtype: bool
-        """
-        n1,n2,n3 = len(s1), len(s2), len(s3)
-        if n3 != n1 + n2:
+class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        n1, n2, n3 = len(s1), len(s2), len(s3)
+        dp = [[False for _ in range(n1+1)] for _ in range(n2+1)]
+        dp[0][0] = True
+        if n1 + n2 != n3:
             return False
-        record = dict()
-        def find(s1,s2,s3):
-            if (len(s1) == 0 and s2 != s3) or (len(s2) == 0 and s1 != s3):
-                record[(s1,s2,s3)] = False
-                return False
-            elif (len(s1) == 0 and s2 == s3) or (len(s2) == 0 and s1 == s3):
-                record[(s1,s2,s3)] = True
-                return True
-            if (s1,s2,s3) in record:
-                return record[(s1,s2,s3)]
-            if s1[0] == s3[0] and s2[0] == s3[0]:
-                res = (find(s1[1:],s2,s3[1:]) or find(s1,s2[1:],s3[1:]))
-                record[(s1,s2,s3)] = res
-                return res
-            elif s1[0] == s3[0]:
-                res = find(s1[1:],s2,s3[1:])
-                record[(s1,s2,s3)] = res
-                return res
-            elif s2[0] == s3[0]:
-                res = find(s1,s2[1:],s3[1:])
-                record[(s1,s2,s3)] = res
-                return res
-            else:
-                record[(s1,s2,s3)] = False
-                return False
-        return find(s1,s2,s3)
+        for i in range(1,n2+1):
+            if s2[i-1] == s3[i-1]:
+                dp[i][0] = dp[i-1][0]
+        for j in range(1,n1+1):
+            if s1[j-1] == s3[j-1]:
+                dp[0][j] = dp[0][j-1]
+        for i in range(1, n2+1):
+            for j in range(1, n1+1):
+                cur = i + j - 1
+                if s3[cur] == s2[i-1]:
+                    dp[i][j] = dp[i][j] or dp[i-1][j]
+                if s3[cur] == s1[j-1]:
+                    dp[i][j] = dp[i][j] or dp[i][j-1]
+        return dp[-1][-1]
+            
         
