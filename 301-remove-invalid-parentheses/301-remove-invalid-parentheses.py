@@ -1,47 +1,32 @@
 class Solution:
-    def removeInvalidParentheses(self, s: str) -> List[str]:
-        stack = []
-        minimum_number = 0
-        for i, char in enumerate(s):
-            if char == '(':
-                stack.append(i)
-            elif char == ')' and not stack:
-                minimum_number += 1
-            elif char == ')':
-                stack.pop()
-        minimum_number += len(stack)
-        seen = set()
-        res = []
-        n = len(s)
-        def isValid(string, step, number, rolling):
-            if number < 0:
-                return
-            if rolling < 0:
-                return
-            if step == n:
-                if number == 0 and rolling == 0 and string not in seen:
-                    res.append(string)
-                    seen.add(string)
-                return
-            #if number > 0, add or remove
-            #if number == 0, can only add
-            #add
-            if s[step] == '(':
-                isValid(string + s[step], step + 1, number, rolling + 1)
-            elif s[step] == ')':
-                isValid(string + s[step], step + 1, number, rolling - 1)      
-            else:
-                isValid(string + s[step], step + 1, number, rolling) 
-                #remove
-            if number > 0 and s[step] in ['(', ')']:
-                isValid(string, step + 1, number - 1, rolling)
-        isValid('', 0, minimum_number, 0)
-        return res
+    def removeInvalidParentheses(self, s):
+        left = right = 0
+        for c in s:
+            if c == "(":
+                left += 1
+            elif c == ")":
+                if left == 0:
+                    right += 1
+                else:
+                    left -= 1
 
-                
-                
-                
-            
-            
-            
-        
+        self.ans = set()
+
+        def dfs(depth, left, right, left_rem, right_rem, cur):
+            if depth == len(s):
+                if left == right and left_rem == right_rem == 0:
+                    self.ans.add(cur)
+            else:
+                if s[depth] == "(" and left_rem > 0:
+                    dfs(depth + 1, left, right, left_rem - 1, right_rem, cur)
+                if s[depth] == ")" and right_rem > 0:
+                    dfs(depth + 1, left, right, left_rem, right_rem - 1, cur)
+                if s[depth] != "(" and s[depth] != ")":
+                    dfs(depth + 1, left, right, left_rem, right_rem, cur + s[depth])
+                elif s[depth] == "(":
+                    dfs(depth + 1, left + 1, right, left_rem, right_rem, cur + "(")
+                elif s[depth] == ")" and right < left:
+                    dfs(depth + 1, left, right + 1, left_rem, right_rem, cur + ")")
+
+        dfs(0, 0, 0, left, right, "")
+        return list(self.ans)
