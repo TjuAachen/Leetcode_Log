@@ -1,39 +1,45 @@
-class Solution:
-    def removeInvalidParentheses(self, s):
-        self.res = []
-        left, right = self.LeftRightCount(s)
-        self.dfs(s, left, right, 0)
-        return self.res
-        
-    def dfs(self, s, left, right, start):
-        if left < 0 or right < 0: 
+class Solution(object):
+    def isValid(self, s):
+        return self.minimum_removal(s) == 0
+    
+    def minimum_removal(self, s):
+        stack  = []
+        minimum_number = 0
+        for char in s:
+            if char == '(':
+                stack.append('(')
+            elif char == ')':
+                if stack:
+                    stack.pop()
+                else:
+                    minimum_number += 1
+        return minimum_number + len(stack)
+    
+    def remove(self, s, start, minimum_removal):
+        global res
+        if minimum_removal == 0:
+            if self.isValid(s):
+                res.append(s)
             return
-        
-        if left==0 and right==0:
-            if self.isvalid(s):
-                self.res.append(s)
-            return
-        
         for i in range(start, len(s)):
             if i > start and s[i] == s[i-1]:
                 continue
-            if s[i] == '(':
-                self.dfs(s[:i]+s[i+1:], left-1, right, i)
-            if s[i] == ')':
-                self.dfs(s[:i]+s[i+1:], left, right-1, i)
+            if s[i] == '(' or s[i] == ')':
+                self.remove(s[:i] + s[i+1:], i, minimum_removal - 1)
+                
     
-    def isvalid(self, s):
-        left, right = self.LeftRightCount(s)
-        return left==0 and right==0
     
-    def LeftRightCount(self, s):
-        left = right = 0
-        for ch in s:
-            if ch == '(':
-                left += 1
-            if ch == ')':
-                if left > 0:
-                    left -= 1
-                else:
-                    right += 1
-        return left, right
+    def removeInvalidParentheses(self, s):
+        """
+        :type s: str
+        :rtype: List[str]
+        """
+        global res
+        res = []
+        minimum_num = self.minimum_removal(s)
+        self.remove(s, 0, minimum_num)
+        return res
+        #duplicate need not to be traversed in the same level
+        #it can be considered as a problem of combination with duplicates
+    
+        
