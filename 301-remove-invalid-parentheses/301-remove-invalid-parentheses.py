@@ -1,6 +1,7 @@
 class Solution(object):
     def isValid(self, s):
-        return self.minimum_removal(s) == 0
+        left, right = self.minimum_removal(s)
+        return left == 0 and right == 0
     
     def minimum_removal(self, s):
         stack  = []
@@ -13,20 +14,24 @@ class Solution(object):
                     stack.pop()
                 else:
                     minimum_number += 1
-        return minimum_number + len(stack)
+        left, right = len(stack), minimum_number
+        return left, right
     
-    def remove(self, s, start, minimum_removal):
+    def remove(self, s, start, left, right):
         global res
-        if minimum_removal == 0:
+        if left < 0 or right < 0:
+            return
+        if left == right == 0:
             if self.isValid(s):
                 res.append(s)
             return
         for i in range(start, len(s)):
             if i > start and s[i] == s[i-1]:
                 continue
-            if s[i] == '(' or s[i] == ')':
-                self.remove(s[:i] + s[i+1:], i, minimum_removal - 1)
-                
+            if s[i] == '(':
+                self.remove(s[:i] + s[i+1:], i, left-1, right)
+            elif s[i] == ')':
+                self.remove(s[:i] + s[i+1:], i, left, right - 1)
     
     
     def removeInvalidParentheses(self, s):
@@ -36,8 +41,8 @@ class Solution(object):
         """
         global res
         res = []
-        minimum_num = self.minimum_removal(s)
-        self.remove(s, 0, minimum_num)
+        left, right = self.minimum_removal(s)
+        self.remove(s, 0, left, right)
         return res
         #duplicate need not to be traversed in the same level
         #it can be considered as a problem of combination with duplicates
