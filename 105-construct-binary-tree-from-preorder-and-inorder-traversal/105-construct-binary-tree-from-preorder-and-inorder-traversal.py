@@ -1,30 +1,47 @@
 # Definition for a binary tree node.
-# class TreeNode:
+# class TreeNode(object):
 #     def __init__(self, val=0, left=None, right=None):
 #         self.val = val
 #         self.left = left
 #         self.right = right
-class Solution:
-    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
-        def build(preorder,inorder):
-            root = TreeNode(preorder[0])
-            left_inorder = inorder[:inorder.index(root.val)]
-            right_inorder = inorder[inorder.index(root.val)+1:]
-            left_preorder = preorder[1:len(left_inorder)+1]
-            right_preorder = preorder[len(left_inorder)+1:]
-            if len(left_inorder) == 0:
-                root.left = None
-            elif len(left_inorder) ==1:
-                root.left = TreeNode(left_inorder[0])
-            else:
-                root.left = build(left_preorder,left_inorder)
-            if len(right_inorder) == 0:
-                root.right = None
-            elif len(right_inorder) == 1:
-                root.right = TreeNode(right_inorder[0])
-            else:
-                root.right = build(right_preorder, right_inorder)
-            return root
-        return build(preorder,inorder)
-                
+class Solution(object):
+    def buildTree(self, preorder, inorder):
+        """
+        :type preorder: List[int]
+        :type inorder: List[int]
+        :rtype: TreeNode
+        """
+        global root
+        root = None
+        def construct(preorder, inorder):
+            global root
+            if not preorder and not inorder:
+                return None            
+            head = TreeNode(preorder[0])
+            
+            if not root:
+                root = head
+            
+            i = 0
+            n_inorder = len(inorder)
+            while(i < n_inorder and inorder[i] != head.val):
+                i = i + 1
+            left_inorder = inorder[:i]
+            right_inorder = inorder[i+1:]
+            n_left_inorder = len(left_inorder)
+            n_right_inorder = len(right_inorder)
+            
+            left_preorder = preorder[1:n_left_inorder+1]
+            right_preorder = preorder[n_left_inorder+1:]
+            
+            left_node = construct(left_preorder, left_inorder)
+            right_node = construct(right_preorder, right_inorder)
+            head.left = left_node
+            head.right = right_node
+            return head
+        construct(preorder, inorder)
+        return root
+            
+            
+            
         
