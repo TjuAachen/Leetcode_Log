@@ -4,27 +4,31 @@ class Solution(object):
         :type grid: List[List[int]]
         :rtype: int
         """
-        global res
         nrow, ncol = len(grid), len(grid[0])
         dire = [(1,0), (0,-1),(-1,0),(0,1)]
         def maxArea(x, y):
-            global res
-            if grid[x][y] == 0:
-                return
-            res += 1
+            stack = []
             grid[x][y] = 0
-            for dx, dy in dire:
-                newx, newy = x + dx, y + dy
-                if 0 <= newy < ncol and 0 <= newx < nrow:
-                    maxArea(newx, newy)
+            stack.append([x,y])
+            ans = 0
+            while(stack):
+                i, j= stack.pop()
+                ans += 1                
+                grid[i][j] = 0
+                for dx, dy in dire:
+                    newx, newy = i + dx, j + dy
+                    if 0 <= newy < ncol and 0 <= newx < nrow:
+                        if grid[newx][newy] == 1:
+                            stack.append([newx, newy])
+                            grid[newx][newy] = 0
+                
+            return ans
         ans = 0
         for i in range(nrow):
             for j in range(ncol):
-                res = 0
                 if grid[i][j] == 0:
                     continue
-                maxArea(i,j)
-                ans = max(ans, res)
+                ans = max(ans, maxArea(i,j))
         return ans
             
         
