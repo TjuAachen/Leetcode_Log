@@ -6,18 +6,19 @@ class Solution(object):
         :type primes: List[int]
         :rtype: int
         """
-        maximum_factor = n // len(primes)
+        factors = []
         uglyNums = [1]
-        heapify(uglyNums)
+        heapify(factors)
         num_primes = len(primes)
-        pointers = [0] * num_primes
+        for prime in primes:
+            heappush(factors,[prime*uglyNums[0], prime, 0])
+
         while(len(uglyNums) < n):
-            candidates = [uglyNums[pointers[i]]*primes[i] for i in range(num_primes)]
-            cur_maximum = min(candidates)
-            uglyNums.append(cur_maximum)
-            for i in range(num_primes):
-                while(primes[i] * uglyNums[pointers[i]] <= cur_maximum):
-                    pointers[i] += 1
+            cur_maximum, prime, idx = heappop(factors)
+            if cur_maximum != uglyNums[-1]:
+                uglyNums.append(cur_maximum)
+            heappush(factors, [prime*uglyNums[idx+1], prime, idx+1])
+            
         return uglyNums[-1]
             
         
