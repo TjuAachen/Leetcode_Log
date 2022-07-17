@@ -6,30 +6,21 @@ class Solution(object):
         """
         n = len(nums)
         longest = [1] * n
-        
-        dp = [[0] * 2 for _ in range(n)]
+        num_of_longest = [1] * n
 
-        for i in range(1, n):
+        for i in range(n):
+            cur_num = nums[i]
             for j in range(i):
-                if nums[j] < nums[i]:
+                if nums[j] < cur_num:
+                    if longest[i] <= longest[j]:
+                        num_of_longest[i] = num_of_longest[j]
+                    elif longest[i] == longest[j] + 1:
+                        num_of_longest[i] += num_of_longest[j]
                     longest[i] = max(longest[i], longest[j] + 1)
+        count = 0
+        maximum_length = max(longest)
         for i in range(n):
-            if longest[i] == 1:
-                dp[i][0] = 1
-                dp[i][1] = 1
-        for i in range(1, n):
-            for j in range(2):
-                cur_length = longest[i] - j
-                for k in range(i):
-                    if nums[k] < nums[i]:
-                        for m in range(2):
-                            prev_length = longest[k] - m
-                            if prev_length + 1 == cur_length:
-                                dp[i][j] += dp[k][m]
-        maximum = max(longest)
-        ans = 0
-        for i in range(n):
-            if longest[i] == maximum:
-                ans += dp[i][0]
-        return ans
+            if longest[i] == maximum_length:
+                count += num_of_longest[i]
+        return count
                 
