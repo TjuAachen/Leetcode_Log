@@ -1,13 +1,13 @@
-class Solution:
-    def generate(self, numRows: int) -> List[List[int]]:
-        res = [[] for _ in range(numRows)]
-        for row in range(numRows):
-            for i in range(1+row):
-                if i == 0 or i == row:
-                    res[row].append(1)
-                else:
-                    res[row].append(res[row-1][i-1] + res[row-1][i])
+class Solution(object):
+    def generate(self, numRows):
+        """
+        :type numRows: int
+        :rtype: List[List[int]]
+        """
+        res = [[1] * (i+1) for i in range(numRows)]
+        
+        for i in range(2, numRows):
+            for elem in range(1, len(res[i]) - 1):
+                res[i][elem] = res[i-1][elem-1] + res[i-1][elem]
         return res
-                    
-                
         
