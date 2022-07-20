@@ -3,9 +3,9 @@ class Solution:
     def kthSmallestSubarraySum(self, nums: List[int], k: int) -> int:
         n = len(nums)
 
-        min_val = 1
+        min_val = min(nums)
 
-        max_val = 10**9
+        max_val = sum(nums)
         
         def count(x):
             left, right = 0, 0
