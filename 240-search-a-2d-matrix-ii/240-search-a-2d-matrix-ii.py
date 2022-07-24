@@ -5,29 +5,21 @@ class Solution(object):
         :type target: int
         :rtype: bool
         """
-        if matrix[0][0] > target or matrix[-1][-1] < target:
-            return False
-        l, r = 0, len(matrix[0]) 
-        while(l < r):
-            mid = (l+r)//2
-            if matrix[0][mid] == target:
+        nrow, ncol = len(matrix), len(matrix[0])
+        
+        i, j = 0, ncol - 1
+        
+        while(0 <= i < nrow and 0 <= j < ncol):
+            cur = matrix[i][j]
+            if cur == target:
                 return True
-            elif matrix[0][mid] > target:
-                r = mid
+            if cur < target:
+                i = i + 1
             else:
-                l = mid + 1
-        col = l - 1
-        for i in range(col+1):
-            l, r = 0, len(matrix) - 1
-            while(l <= r):
-                mid = (l + r) // 2
-                if matrix[mid][i] == target:
-                    return True
-                elif matrix[mid][i] > target:
-                    r = mid - 1
-                else:
-                    l = mid + 1
+                j = j - 1
+           # print(i,j, cur)
         return False
+                
         
             
         
