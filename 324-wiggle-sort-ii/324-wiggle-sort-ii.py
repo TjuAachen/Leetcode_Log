@@ -1,49 +1,59 @@
-class Helper:
-    @staticmethod
-    def quickSelect(arr: List, l: int, r: int, index: int) -> int:
-        q = Helper.randomPartition(arr, l, r)
-        if q == index:
-            return arr[q]
-        if q < index:
-            return Helper.quickSelect(arr, q + 1, r, index)
-        return Helper.quickSelect(arr, l, q - 1, index)
-
-    @staticmethod
-    def randomPartition(nums: List, l: int, r: int) -> int:
-        i = randint(l, r)
-        nums[r], nums[i] = nums[i], nums[r]
-        return Helper.partition(nums, l, r)
-
-    @staticmethod
-    def partition(nums: List, l: int, r: int) -> int:
-        pivot = nums[r]
-        i = l - 1
-        for j in range(l, r):
-            if nums[j] < pivot:
-                i += 1
-                nums[i], nums[j] = nums[j], nums[i]
-        nums[i + 1], nums[r] = nums[r], nums[i + 1]
-        return i + 1
-
-class Solution:
-    def wiggleSort(self, nums: List[int]) -> None:
+import random
+class Solution(object):
+    def wiggleSort(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: None Do not return anything, modify nums in-place instead.
+        """
         n = len(nums)
-        x = (n + 1) // 2
-        seed(datetime.datetime.now())
-        target = Helper.quickSelect(nums, 0, n - 1, x - 1)
-
-        transAddress = lambda i: (2 * n - 2 * i - 1) % (n | 1)
-        k, i, j = 0, 0, n - 1
-        while k <= j:
-            tk = transAddress(k)
-            if nums[tk] > target:
-                while j > k and nums[transAddress(j)] > target:
-                    j -= 1
-                tj = transAddress(j)
-                nums[tk], nums[tj] = nums[tj], nums[tk]
-                j -= 1
-            if nums[tk] < target:
-                ti = transAddress(i)
-                nums[tk], nums[ti] = nums[ti], nums[tk]
+        
+        #partition function
+        def partition(nums, left, right):
+            pivot_index = random.randint(left, right)
+            nums[pivot_index], nums[right] = nums[right], nums[pivot_index]
+            pivot = nums[right]
+            j = left
+            for i in range(left, right):
+                if nums[i] <= pivot:
+                    nums[i], nums[j] = nums[j], nums[i]
+                    j = j + 1
+            #post processing
+            nums[right], nums[j] = nums[j], nums[right]
+            return j
+        
+        
+        #quick select find the median
+        def find_median():
+            left, right = 0, n - 1
+            expected = (n+1) // 2 - 1
+            while(left <= right):
+                mid = partition(nums, left, right)
+                if mid == expected:
+                    return mid
+                elif mid < expected:
+                    left = mid + 1
+                else:
+                    right = mid - 1
+            return -1
+        
+        #transfer the address
+        def transfer(i):
+            return (2 * i + 1)%(n | 1)
+        
+        #three way partition
+        mid_index = find_median()
+        median = nums[mid_index]
+        i, j, k = 0, 0, n - 1
+      #  print(mid_index, nums)
+        while(j <= k):
+            new_i, new_j, new_k = transfer(i), transfer(j), transfer(k)
+            if nums[new_j] > median:
+                nums[new_j], nums[new_i] = nums[new_i], nums[new_j]
+                j += 1
                 i += 1
-            k += 1
+            elif nums[new_j] < median:
+                nums[new_k], nums[new_j] = nums[new_j], nums[new_k]
+                k -= 1
+            else:
+                j += 1
+          #  print(nums, nums[new_j], median)
