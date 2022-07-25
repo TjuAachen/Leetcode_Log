@@ -7,53 +7,25 @@ class Solution(object):
         """
         n = len(nums)
         
-        #partition function
-        def partition(nums, left, right):
-            pivot_index = random.randint(left, right)
-            nums[pivot_index], nums[right] = nums[right], nums[pivot_index]
-            pivot = nums[right]
-            j = left
-            for i in range(left, right):
-                if nums[i] <= pivot:
-                    nums[i], nums[j] = nums[j], nums[i]
-                    j = j + 1
-            #post processing
-            nums[right], nums[j] = nums[j], nums[right]
-            return j
+        #sort the nums first
+        nums.sort()
+        temp = []
         
+        mid = n // 2
         
-        #quick select find the median
-        def find_median():
-            left, right = 0, n - 1
-            expected = (n+1) // 2 - 1
-            while(left <= right):
-                mid = partition(nums, left, right)
-                if mid == expected:
-                    return mid
-                elif mid < expected:
-                    left = mid + 1
-                else:
-                    right = mid - 1
-            return -1
-        
-        #transfer the address
-        def transfer(i):
-            return (2 * i + 1)%(n | 1)
-        
-        #three way partition
-        mid_index = find_median()
-        median = nums[mid_index]
-        i, j, k = 0, 0, n - 1
-      #  print(mid_index, nums)
-        while(j <= k):
-            new_i, new_j, new_k = transfer(i), transfer(j), transfer(k)
-            if nums[new_j] > median:
-                nums[new_j], nums[new_i] = nums[new_i], nums[new_j]
-                j += 1
-                i += 1
-            elif nums[new_j] < median:
-                nums[new_k], nums[new_j] = nums[new_j], nums[new_k]
-                k -= 1
+        less_part = nums[:mid+n%2]
+        larger_part = nums[mid+n%2:]
+       # print(less_part, larger_part)
+        less_pointer, larger_pointer = len(less_part) - 1, len(larger_part) - 1
+        cur_index = 0
+        while(less_pointer >= 0 or larger_pointer >= 0):
+            if cur_index % 2 == 0:
+                temp.append(less_part[less_pointer])
+                less_pointer -= 1
             else:
-                j += 1
-          #  print(nums, nums[new_j], median)
+                temp.append(larger_part[larger_pointer])
+                larger_pointer -= 1
+            cur_index += 1
+           # print(temp, less_part, larger_part)
+        nums[:] = temp[:]
+        return nums
