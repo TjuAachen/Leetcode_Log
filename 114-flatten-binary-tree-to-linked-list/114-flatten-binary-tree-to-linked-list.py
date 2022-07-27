@@ -1,45 +1,34 @@
 # Definition for a binary tree node.
-# class TreeNode(object):
+# class TreeNode:
 #     def __init__(self, val=0, left=None, right=None):
 #         self.val = val
 #         self.left = left
 #         self.right = right
-class Solution(object):
-    def flatten(self, root):
+class Solution:
+    def flatten(self, root: Optional[TreeNode]) -> None:
         """
-        :type root: TreeNode
-        :rtype: None Do not return anything, modify root in-place instead.
+        Do not return anything, modify root in-place instead.
         """
-        stack = []
-        tail = dict()
-        def pushLeft(root):
-            pointer = root
-            while(pointer):
-                stack.append(pointer)
-                pointer = pointer.left
-        visited = dict()
-        pushLeft(root)
-        while(stack):
-            top = stack[-1]
-            if (not top.left or top.left in visited) and top.right not in visited:
-                pushLeft(top.right)
-                if top.left:
-                    tail[top] = tail_node
-            if not top.right or top.right in visited:
-                if not top.left and not top.right:
-                    tail_node = top
-                stack.pop()
-                visited[top] = 1
-                if top.left and top.right:
-                    tail_left = tail[top]
-                    tail_left.right = top.right
-                    top.right = top.left
-                    top.left = None
-                elif not top.right:
-                    top.right = top.left
-                    top.left = None
-            
-
-                
-                
-        
+        if not root:
+            return None
+       # head = root
+        #Morris preorder traversal
+        def rightmost_in_left_tree(node):
+            node = node.left
+            while(node.right):
+                node = node.right
+            return node
+        head = TreeNode(-1)
+        cur_list = head
+        cur = root
+        while(cur):
+            cur_list.right = cur
+            cur_list.left = None
+            if cur.left != None:
+                rightmost_in_left = rightmost_in_left_tree(cur)
+                rightmost_in_left.right = cur.right
+                cur = cur.left
+            else:
+                cur = cur.right
+            cur_list = cur_list.right
+        return root
