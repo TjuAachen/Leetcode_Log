@@ -7,14 +7,26 @@ class Solution:
     def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:
         sanitel = ListNode()
         sanitel.next = head
-        first, second =sanitel, head
-        while(second and second.next):
-            first.next = second.next
-            second.next = second.next.next
-            first.next.next = second
-            first = first.next.next
-            second = first.next
-        return sanitel.next
+        def swap(head):
+            if not head.next:
+                return None
+            if not head.next.next:
+                return head.next
+            second = head.next
+            third = head.next.next
+            
+            head.next = third
+            second.next = third.next
+            third.next = second
+            second.next = swap(second)
+            return head.next
+        return swap(sanitel)
+        
+            
+            
+            
+            
+            
             
             
             
