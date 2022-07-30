@@ -1,22 +1,20 @@
 class Solution:
     def wordSubsets(self, words1: List[str], words2: List[str]) -> List[str]:
-        word2_array = [0] * 26
+        word2_array = defaultdict(int)
         for word in words2:
-            temp = [0] * 26
+            temp = defaultdict(int)
             for char in word:
-                index = ord(char) - ord('a')
-                temp[index] += 1
-            for i in range(26):
-                word2_array[i] = max(word2_array[i], temp[i])
+                temp[char] += 1
+                word2_array[char] = max(word2_array[char], temp[char])
         res = []
         for word in words1:
-            temp = [0] * 26
+            temp = defaultdict(int)
             for char in word:
-                index = ord(char) - ord('a')
-                temp[index] += 1
+                temp[char] += 1
+                
             flag = False
-            for i in range(26):
-                if word2_array[i] > temp[i]:
+            for key in word2_array.keys():
+                if word2_array[key] > temp[key]:
                     flag = True
                     break
             if not flag:
