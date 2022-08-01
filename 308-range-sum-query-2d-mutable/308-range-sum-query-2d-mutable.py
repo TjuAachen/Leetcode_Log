@@ -1,81 +1,67 @@
-class NumMatrix:
+class NumMatrix(object):
 
-    def __init__(self, matrix: List[List[int]]):
-        self.nrow, self.ncol = len(matrix), len(matrix[0])
-        self.tree = [[0 for _ in range(4*self.nrow)] for _ in range(4*self.ncol)]
+    def __init__(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        """
         self.matrix = matrix
-        self.buildTree(1, 1, 0, self.ncol -1, 0, self.nrow - 1)
+        self.nrow, self.ncol = len(matrix) + 1, len(matrix[0]) + 1
+        self.BIT = [[0] * self.ncol for _ in range(self.nrow + 1)]
+        self.build()
     
-    def buildTree(self, row, col, left, right, up, down):
-        if left == right and up == down:
-            self.tree[row][col] = self.matrix[up][left]
-            return
-        mid1, mid2 = left + (right - left) // 2, up + (down - up) // 2
-        if left != right and up != down:
-            self.buildTree(2*row, 2* col, left, mid1, up, mid2)
-            self.buildTree(2*row + 1, 2* col,mid1 + 1, right, up, mid2)
-            self.buildTree(2*row + 1, 2* col + 1, mid1 + 1, right, mid2 + 1, down)
-            self.buildTree(2*row, 2* col + 1, left, mid1, mid2+1, down)
-            self.tree[row][col] = self.tree[2*row+1][2*col] + self.tree[2*row][2*col] + self.tree[2*row][2*col+1] + self.tree[2*row+1][2*col+1]
-        elif left == right and up != down:
-            self.buildTree(row, 2* col, left, right, up, mid2)
-            self.buildTree(row, 2* col + 1, left, right, mid2 + 1, down)
-            self.tree[row][col] = self.tree[row][2*col] + self.tree[row][2*col + 1]
-        elif left != right and up == down:
-            self.buildTree(2*row, col, left, mid1, up, down)
-            self.buildTree(2*row + 1, col,mid1 + 1, right, up, down)
-            self.tree[row][col] = self.tree[2*row][col] + self.tree[2*row + 1][col]       
-    def point_update(self, row, col, left, right, up, down, r, c, val):
-        if left == right == c and up == down == r:
-            self.tree[row][col] = val
-            self.matrix[r][c] = val
-            return
-        if c < left or c > right or r < up or r > down:
-            return
-        mid1, mid2 = left + (right - left) // 2, up + (down - up) // 2
-        if left != right and up != down:
-            self.point_update(2*row, 2* col, left, mid1, up, mid2, r, c, val)
-            self.point_update(2*row + 1, 2* col,mid1 + 1, right, up, mid2, r, c, val)
-            self.point_update(2*row + 1, 2* col + 1, mid1 + 1, right, mid2 + 1, down, r, c, val)
-            self.point_update(2*row, 2* col + 1, left, mid1, mid2+1, down, r, c, val)
-            self.tree[row][col] = self.tree[2*row+1][2*col] + self.tree[2*row][2*col] + self.tree[2*row][2*col+1] + self.tree[2*row+1][2*col+1]
-        elif left == right and up != down:
-            self.point_update(row, 2* col, left, right, up, mid2, r, c, val)
-            self.point_update(row, 2* col + 1, left, right, mid2 + 1, down, r, c, val)
-            self.tree[row][col] = self.tree[row][2*col] + self.tree[row][2*col + 1]
-        elif left != right and up == down:
-            self.point_update(2*row, col, left, mid1, up, down, r, c, val)
-            self.point_update(2*row + 1, col,mid1 + 1, right, up, down, r, c, val)
-            self.tree[row][col] = self.tree[2*row][col] + self.tree[2*row + 1][col] 
-
-    def update(self, row: int, col: int, val: int) -> None:
-        self.point_update(1, 1, 0, self.ncol - 1, 0, self.nrow - 1, row, col, val)
+    def lowbit(self, num):
+        return num&(-num)
     
-    def enquiry(self, row, col, left, right, up, down, row1, col1, row2, col2):
-        if col1 <= left and right <= col2 and row1 <= up and down <= row2:
-            return self.tree[row][col]
+    def build(self):
+        for i in range(1, self.nrow):
+            for j in range(1, self.ncol):
+                self.point_update(i-1, j - 1, self.matrix[i-1][j-1])
+    def point_update(self, row, col, delta):
+        i, j = row + 1, col + 1
+        while(i < self.nrow):
+         #   self.BIT[i][j] += delta
+            k = j
+            while(k < self.ncol):
+                self.BIT[i][k] += delta
+                k += self.lowbit(k)
+            i += self.lowbit(i)
         
-        mid1, mid2 = left + (right - left) // 2, up + (down - up) // 2
-        if right < col1 or col2 < left or row2 < up or down < row1:
-            return 0 
-        ans = 0
-        if left != right and up != down:
-            ans += self.enquiry(2*row, 2* col, left, mid1, up, mid2,row1, col1, row2, col2)
-            ans += self.enquiry(2*row + 1, 2* col,mid1 + 1, right, up, mid2,row1, col1, row2, col2)
-            ans += self.enquiry(2*row + 1, 2* col + 1, mid1 + 1, right, mid2 + 1, down,row1, col1, row2, col2)
-            ans += self.enquiry(2*row, 2* col + 1, left, mid1, mid2+1, down,row1, col1, row2, col2)
-        elif left == right and up != down:
-            ans += self.enquiry(row, 2* col, left, right, up, mid2,row1, col1, row2, col2)
-            ans += self.enquiry(row, 2* col + 1, left, right, mid2 + 1, down,row1, col1, row2, col2)
-        elif left != right and up == down:
-            ans += self.enquiry(2*row, col, left, mid1, up, down,row1, col1, row2, col2)
-            ans += self.enquiry(2*row + 1, col,mid1 + 1, right, up, down,row1, col1, row2, col2)            
-        return ans
-            
-    
-    def sumRegion(self, row1: int, col1: int, row2: int, col2: int) -> int:
-        return self.enquiry(1, 1, 0, self.ncol - 1, 0, self.nrow -1, row1, col1, row2, col2)
-    
+    def update(self, row, col, val):
+        """
+        :type row: int
+        :type col: int
+        :type val: int
+        :rtype: None
+        """
+        delta = val - self.matrix[row][col]
+        self.point_update(row, col, delta)
+        self.matrix[row][col] = val
+    def prefix_sum(self, row, col):
+        i, j = row + 1, col + 1
+        res = 0
+        while(i > 0):
+          #  res += self.BIT[i][j]
+            k = j
+            while(k > 0):
+                res += self.BIT[i][k]
+                k -= self.lowbit(k)
+            i -= self.lowbit(i)
+        return res
+                
+    def sumRegion(self, row1, col1, row2, col2):
+        """
+        :type row1: int
+        :type col1: int
+        :type row2: int
+        :type col2: int
+        :rtype: int
+        """
+       # print(self.BIT)
+        r2_c2 = self.prefix_sum(row2, col2)
+        r1_c1 = self.prefix_sum(row1 - 1, col1 - 1)
+        r1_c2 = self.prefix_sum(row1-1, col2)
+        r2_c1 = self.prefix_sum(row2 , col1 - 1)
+        return r2_c2 + r1_c1 - r1_c2 - r2_c1
         
         
 
