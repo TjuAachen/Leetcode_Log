@@ -8,7 +8,7 @@ class TicTacToe:
         self.n = n
         self.positive_diagonal_sum = 0
         self.negative_diagonal_sum = 0
-    def detect(self):
+    def detect(self, row, col):
         #diagonal
         n = self.n
 
@@ -17,10 +17,10 @@ class TicTacToe:
         if self.positive_diagonal_sum == 101*n or self.negative_diagonal_sum == 101*n:
             return True,2
         #vertical
-        if any([elem == n for elem in self.vertical_sum]) or any([elem == n for elem in self.horizontal_sum]):
+        if self.vertical_sum[row] == n or self.horizontal_sum[col] == n:
             return True,1
         #horizontal
-        if any([elem == 101*n for elem in self.vertical_sum]) or any([elem == 101*n for elem in self.horizontal_sum]):
+        if self.vertical_sum[row] == 101*n or self.horizontal_sum[col] == 101*n:
             return True,2
         
         return False,0
@@ -47,7 +47,7 @@ class TicTacToe:
                 self.negative_diagonal_sum += 101
                 #print(1)
         #print(self.vertical_sum, self.horizontal_sum)
-        boolean ,self.status = self.detect()
+        boolean ,self.status = self.detect(row, col)
         return self.status
 
 
