@@ -13,7 +13,7 @@ class SnakeGame:
         self.food = food
         self.cur_food = self.food[0]
         self.score = 0
-        
+        self.movement = {'U': [-1, 0], 'L': [0, -1], 'R': [0, 1], 'D': [1, 0]}
         #status 1: Movable, 0: not movable
         self.status = 1
     
@@ -30,17 +30,11 @@ class SnakeGame:
        # print(self.snake,self.snake_set, self.status, direction)
         if self.status == 0:
             return -1
-        print(self.snake, direction)
+        
         old_head = self.snake.popleft()
         self.snake_set.remove(tuple(old_head))
-        if direction == 'U':
-            self.update_score_body(old_head, -1, 0)
-        if direction == 'D':
-            self.update_score_body(old_head, 1, 0)
-        if direction == 'L':
-            self.update_score_body(old_head, 0, -1)
-        if direction == 'R':
-            self.update_score_body(old_head, 0, 1)
+        x, y = self.movement[direction]
+        self.update_score_body(old_head, x, y)
         if self.status:
             return self.score
         return -1
