@@ -1,12 +1,23 @@
-class Solution:
-    def lengthOfLIS(self, nums: List[int]) -> int:
-        n=len(nums)
-        sub = []
-        for ind, num in enumerate(nums):
-            if not sub or num > sub[-1]:
-                sub.append(num)
+from bisect import *
+class Solution(object):
+    def lengthOfLIS(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        #intelligently built
+        
+        res = []
+        longest = 0
+        for num in nums:
+            n = len(res)
+            if not res or num > res[-1]:
+                res.append(num)
             else:
-                pos = bisect_left(sub, num)
-                sub[pos] = num
-        return len(sub)
-                
+                i = bisect_left(res, num)
+                if 0 <= i < n:
+                    res[i] = num
+                   # res = res[:i+1]
+            longest = max(longest, len(res))
+           # print(res)
+        return longest
