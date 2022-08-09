@@ -5,46 +5,25 @@ class Solution:
         arr.sort()
         
         n = len(arr)
-        leaf = set()
+       # leaf = set()
+      #  n = len(arr)
+        MOD = 10**9 + 7
+        memo =defaultdict(lambda: 1)
+        #dp = [1] * n
         arr_set = set(arr)
-        for i in range(n-1, -1, -1):
+        for i in range(n):
             cur = arr[i]
-            visited = set()
-            for j in range(i, -1, -1):
+            memo[cur]
+            for j in range(i):
                 nxt = arr[j]
-                if cur%nxt == 0:
-                    another = cur // nxt
-                    if another in arr_set and another not in visited:
-                        pairs[cur].append((nxt, another))
-                        visited.add(another)
-                        visited.add(nxt)
-            if cur not in pairs:
-                leaf.add(cur)
-        memo = {}
-       # print(pairs)
-        def count_from_root(node):
-            if node in memo:
-                return memo[node]
-            if node in leaf:
-                memo[node] = 1
-                return 1
-            ans = 0
-            for factor1, factor2 in pairs[node]:
-                if factor1 == factor2:
-                    ans += count_from_root(factor1) * count_from_root(factor1) 
-                else:
-                    ans += count_from_root(factor1)*count_from_root(factor2)*2
-            memo[node] = ans + 1
-            return memo[node]
+                another = cur // nxt
+                if cur%nxt == 0 and another in arr_set:
+                    memo[cur] += (memo[nxt] * memo[another])%MOD
+                        
         
-        ans = 0
+        return sum(list(memo.values()))%MOD
         
-        for num in arr:
-            temp = count_from_root(num)
-            ans = (ans+temp)%(10**9 + 7)
-          #  print(ans, num, temp)
-        #print(memo)
-        return ans%(10**9+7)
+
         
             
                         
