@@ -5,17 +5,24 @@ class Solution(object):
         :rtype: bool
         """
         stack = []
-        c = -float('inf')
-        n = len(nums)
-        for i in range(n-1, -1, -1):
-            if nums[i] < c:
-                return True
-            if not stack or nums[i] < stack[-1]:
-                stack.append(nums[i])
+        k = None
+        for num in reversed(nums):
+            #print(num, k)
+            if k != None and num < k:
+                    return True
+            if not stack or stack[-1] > num:
+                stack.append(num)
             else:
-                while(stack and stack[-1] < nums[i]):
-                    c = max(c, stack.pop())
-                stack.append(nums[i])
+                while(stack and stack[-1] <= num):
+                    popped = stack.pop()
+                    #print(popped, num, k)
+                    if k == None and popped != num:
+                        k = popped
+                    elif popped != num:
+                        k = max(popped, k)
+                stack.append(num)
+                #print(k)
+            #print(k)
         return False
             
         
