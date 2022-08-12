@@ -13,22 +13,12 @@ class Solution(object):
         :type q: TreeNode
         :rtype: TreeNode
         """
-        global ancestor
-        ancestor = None
-        def is_p_or_q(root):
-            global ancestor
-            if not root:
-                return False
-            left = is_p_or_q(root.left)
-            right = is_p_or_q(root.right)
-            if not ancestor:
-                if (left or right) and (root == p or root == q):
-                    ancestor = root
-                if left and right:
-                    ancestor = root
-            if left or right or root == p or root == q:
-                return True
-            return False
-        is_p_or_q(root)
-        return ancestor
+        cur = root
+        while(cur):
+            if cur.val < p.val and cur.val < q.val:
+                cur = cur.right
+            elif cur.val > p.val and cur.val > q.val:
+                cur = cur.left
+            else:
+                return cur
         
