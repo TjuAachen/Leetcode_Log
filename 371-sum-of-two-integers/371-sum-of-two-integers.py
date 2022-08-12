@@ -1,24 +1,16 @@
-class Solution:
-    def getSum(self, a: int, b: int) -> int:
-        x, y = abs(a), abs(b)
+class Solution(object):
+    def getSum(self, a, b):
+        """
+        :type a: int
+        :type b: int
+        :rtype: int
+        """
+        mask = 0xFFFFFFFF
+        max_int = 0x7FFFFFFF
         
-        if x < y:
-            x, y = y, x
-
-        sign = 1
-        if a * b > 0:
-            if a < 0:
-                sign = -1
-            while y:
-                temp_x, temp_y = (x^y), (x&y) << 1
-                x, y = temp_x, temp_y
-        else:
-            if abs(max(a,b)) < abs(min(a,b)):
-                sign = -1
-              #  print(sign)
-            while y:
-                temp_x, temp_y = (x^y), ((~x)&y)<<1
-                x, y = temp_x, temp_y
-      #  print(abs(max(a,b)), abs(min(a,b)))
-        return x*sign 
+        while(b != 0):
+            a, b = (a ^ b) & mask, ((a & b) << 1) & mask
+        if a <= max_int:
+            return a
+        return ~(a^mask)
         
