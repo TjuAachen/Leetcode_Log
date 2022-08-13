@@ -11,7 +11,9 @@ class Solution:
             res = float('inf')
             if (start, end) in memo:
                 return memo[(start, end)]
-            for division in range(start, end + 1):
+            mid = (start + end) // 2
+           # print(mid, start, end)
+            for division in range(mid, end):
                 left, right = -float('inf'), -float('inf')
                 if (start, division - 1) in memo:
                     left = memo[(start, division - 1)]
