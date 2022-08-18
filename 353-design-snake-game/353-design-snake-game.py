@@ -1,54 +1,52 @@
-class SnakeGame:
+class SnakeGame(object):
 
-    def __init__(self, width: int, height: int, food: List[List[int]]):
-        
-        #snake deque
-        self.snake = deque()
-        self.snake.append([0,0])
-        
-        #store the snake body for searching
-        self.snake_set = set([(0,0)])
+    def __init__(self, width, height, food):
+        """
+        :type width: int
+        :type height: int
+        :type food: List[List[int]]
+        """
+        self.food = food
         self.width = width
         self.height = height
-        self.food = food
-   #     self.cur_food = self.food[0]
+        self.snake_deque = deque([[0,0]])
+        self.snake_set = set()
+        self.snake_set.add((0,0))
+        self.move_step = {'L':(0,-1), 'R':(0,1), 'U':(-1,0), 'D':(1,0)}
         self.score = 0
-        self.movement = {'U': [-1, 0], 'L': [0, -1], 'R': [0, 1], 'D': [1, 0]}
-
-    
-    def detect_hitting(self, new_head):
-        #decide the snake body and wall
-        within_boundary = 0 <= new_head[1] < self.width and 0 <= new_head[0] < self.height
-        bite_self = tuple(new_head) in self.snake_set and new_head != self.snake[-1]
-        if not bite_self and within_boundary:
-            return False
-        return True
         
-    def move(self, direction: str) -> int:
-        old_head = self.snake[0]
-        x, y = self.movement[direction]
-        return self.update_score_body(old_head, x, y)
-    
-    def update_score_body(self, old_head, x, y):
-        new_head = [old_head[0] + x, old_head[1] + y]
-        #hit the wall or body
+    def detect_hitting(self, new_head):
+        #detect the hitting of wall
+        is_hitting_wall = True
+        if 0 <= new_head[0] < self.height and 0 <= new_head[1] < self.width:
+            is_hitting_wall = False
+        #detect the hitting of itself
+        is_hitting_self = tuple(new_head) in self.snake_set and new_head != self.snake_deque[-1]
+        if is_hitting_self or is_hitting_wall:
+            return True
+        return False
+
+    def move(self, direction):
+        """
+        :type direction: str
+        :rtype: int
+        """
+        step = self.move_step[direction]
+        new_head = [self.snake_deque[0][0] + step[0], self.snake_deque[0][1] + step[1]]
         if self.detect_hitting(new_head):
             return -1
-            #update score/body/food
-        if self.food and new_head == self.food[0]:  
-            #update score
-            self.score += 1
-            #update food 
+        
+        if self.food and self.food[0] == new_head:
             self.food.pop(0)
-        #remove tail if no food
+            self.score += 1
         else:
-            old_tail = self.snake.pop()
+            old_tail = self.snake_deque.pop()
             self.snake_set.remove(tuple(old_tail))
-        self.snake.appendleft(new_head)
+        self.snake_deque.appendleft(new_head)
         self.snake_set.add(tuple(new_head))
         return self.score
-
-            
+        
+        
 
 
 # Your SnakeGame object will be instantiated and called as such:
