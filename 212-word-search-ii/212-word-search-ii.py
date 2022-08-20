@@ -1,54 +1,41 @@
 class Solution:
     def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
-        WORD_KEY = '$'
-        rowNum = len(board)
-        colNum = len(board[0])
-        trie = {}
+        nrow, ncol = len(board), len(board[0])
+        
+        #construct trie tree for words
+        trie = dict()
+        
+        word_key = '$'
+        
         for word in words:
             node = trie
-            for letter in word:
-                # retrieve the next node; If not found, create a empty node.
-                node = node.setdefault(letter, {})
-            # mark the existence of a word in trie node
-            node[WORD_KEY] = word
-        #keep words with trie
-        #backtrack along the trie
-        #remove the traversed from the trie
-        matched_words = []
-        diff = [(0,1), (0,-1),(1,0),(-1,0)]
-        def dfs(row, col, parent):
-            letter = board[row][col]
-            cur_node = parent[letter]
-            
-            word_match = cur_node.pop(WORD_KEY, False)
-            
-            if word_match:
-                matched_words.append(word_match)
-            
-            #revisited
-            board[row][col] = '#'
-            
-            for row_offset, col_offset in diff:
-                newRow, newCol = row + row_offset, col + col_offset
-                if 0 <= newRow < rowNum and 0 <= newCol < colNum and board[newRow][newCol] in cur_node:
-                    dfs(newRow, newCol, cur_node)
-            
-            board[row][col] = letter
-            
-            #remove leaf node
-            if not cur_node:
-                parent.pop(letter)
+            for char in word:
+                node = node.setdefault(char, {})
+            node[word_key] = word
         
-        for i in range(rowNum):
-            for j in range(colNum):
+        #dfs search in the trie tree of words
+        res = []
+        diff = [(0,1),(0,-1),(1,0),(-1,0)]
+        def backtracking(i,j,node):
+            letter = board[i][j]
+            if letter in node:
+                board[i][j] = '#'
+                if word_key in node[letter]:
+                    res.append(node[letter][word_key])
+                    del node[letter][word_key]
+             #   nxt_board = defaultdict(list)
+                for dx, dy in diff:
+                    newx, newy = dx + i, dy + j
+                    if 0 <= newy < ncol and 0 <= newx < nrow and board[newx][newy] !='#':
+                        backtracking(newx, newy, node[letter])
+                board[i][j] = letter
+        for i in range(nrow):
+            for j in range(ncol):
                 if board[i][j] not in trie:
                     continue
-                dfs(i, j, trie)
-        
-        return matched_words
-            
-        
+              #  visited = set()
+                backtracking(i, j, trie)
+        return res
                 
-                    
             
         
