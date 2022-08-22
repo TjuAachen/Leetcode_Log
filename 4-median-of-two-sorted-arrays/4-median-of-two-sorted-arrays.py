@@ -5,52 +5,72 @@ class Solution(object):
         :type nums2: List[int]
         :rtype: float
         """
-        m, n = len(nums1), len(nums2)
-        flag = (m + n) % 2
-        k = (n + m -1) // 2
-        res = []
-        if m == 0:
-            if flag == 1:
-                return nums2[k]
-            return (nums2[k] + nums2[k+1]+0.0)/2
-        if n == 0:
-            if flag == 1:
-                return nums1[k]
-            return (nums1[k] + nums1[k+1]+0.0)/2
-        if m == min(m,n):
+        if len(nums1) < len(nums2):
             nums1, nums2 = nums2, nums1
-        nums2 = [-10**6-1] + nums2 + [10**6 + 1]
-        nums1 = [-10**6-1] + nums1 + [10**6 + 1]
-        left, right = 1, len(nums2) - 2
-        while(left <= right):
-            mid = left + (right - left) // 2 
-            ele_middle = k - mid + 2
-            if nums1[ele_middle] == nums2[mid]:
-                return nums2[mid]
-            elif nums1[ele_middle] < nums2[mid]:
-                if nums2[mid] <= nums1[ele_middle+1]:
-                    if flag == 1:
-                        return max(nums1[ele_middle],nums2[mid-1])
-                    else:
-                        return (max(nums1[ele_middle],nums2[mid-1]) + nums2[mid]+0.0)/2
-                else:
-                    right = mid -1
-            else:
-                if nums1[ele_middle] <= nums2[mid+1]:
-                    if flag == 1:
-                        return max(nums2[mid], nums1[ele_middle-1])
-                    else:
-                        return (nums1[ele_middle] + max(nums1[ele_middle-1],nums2[mid])+0.0)/2
-                else:
+        longer, shorter = nums1, nums2
+        longer_len, shorter_len = len(longer), len(shorter)
+        shorter.append(float('inf'))
+        shorter.insert(0, -float('inf'))
+        longer.append(float('inf'))
+        longer.insert(0, -float('inf'))        
+        target_k = (longer_len + shorter_len) // 2
+        
+        if shorter_len == 0:
+            if longer_len%2:
+                return longer[target_k+1]
+            return (longer[target_k] + longer[target_k+1])/2.0
+        
+
+        def binary_search(left, right):
+            while(left <= right):
+                mid = left + (right - left) // 2
+             #   print(left, right, mid, target_k)
+                shorter_idx = target_k + 1 - mid
+              #  print(shorter_idx,shorter[shorter_idx])
+                if shorter_idx < 1:
+                    right = mid - 1
+                    continue
+                if shorter_idx > shorter_len:
                     left = mid + 1
-            if right == 0:
-                if flag == 1:
-                    return nums1[k+1]
-                return (nums1[k+1]+nums1[k+2]+0.0)/2
-            if left == len(nums2)-1:
-                if flag == 1:
-                    return nums1[k+1-n]
-                return (nums1[k+1-n]+nums1[k+2-n]+0.0)/2
+                    continue
+                if shorter[shorter_idx - 1]<= longer[mid] <= shorter[shorter_idx + 1]:
+                    return mid, shorter_idx, True
+                if longer[mid - 1] <= shorter[shorter_idx] <= longer[mid + 1]:
+                    return mid, shorter_idx, False
+                if longer[mid] < shorter[shorter_idx - 1]:
+                    left = mid + 1
+                if longer[mid] > shorter[shorter_idx + 1]:
+                    right = mid - 1
+        left, right = 0, longer_len 
+        longer_idx, shorter_idx, in_longer = binary_search(left, right)
+        is_odd = (longer_len + shorter_len) % 2
+        longer_val, shorter_val = longer[longer_idx], shorter[shorter_idx]
+       # print(longer_idx, shorter_idx)
+        if in_longer:
+            #k//2
+            if longer_val >= shorter_val:
+                if is_odd:
+                    return longer_val
+                return (max(longer[longer_idx - 1], shorter_val) + longer_val)/2.0
+            #k/2 - 1
+            if is_odd:
+                return min(longer[longer_idx + 1], shorter_val)
+            return (min(longer[longer_idx + 1], shorter_val) + longer_val)/2.0
+        #k//2
+        if longer_val <= shorter_val:
+            if is_odd:
+                return shorter_val
+            return (max(longer[longer_idx - 1], shorter[shorter_idx - 1]) + shorter_val)/2.0
+        #k/2 - 1
+        if is_odd:
+            return min(longer[longer_idx + 1], shorter[shorter_idx + 1])
+        return (min(longer[longer_idx + 1], shorter[shorter_idx + 1]) + shorter_val)/2.0 
+                
+        
+            
+            
+        
+            
             
                      
                      
