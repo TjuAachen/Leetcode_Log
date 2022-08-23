@@ -1,22 +1,28 @@
 class Solution {
     public String longestPalindrome(String s) {
+        //expand around center
         int N = s.length();
-        boolean[][] dp = new boolean[N][N];
-        //base case:
-        //odd: dp[i][i] = true, even: dp[i][i+1] = true, 
-        //transition equation:
-        //if s.charAt[i] == s.charAt[j] && j - i >= 2: dp[i][j] = dp[i+1][j-1]
-        //elif j - i < 2, dp[i][j] = true
-        int start = 0, end = 0;
-        for (int i = N - 1; i >= 0; i--)
-            for(int j = i; j < N; j++)
-                if (s.charAt(i) == s.charAt(j) && (j - i <= 2 || dp[i+1][j-1])){
-                    dp[i][j] = true;
-                    if (j - i > end - start){
-                        start = i;
-                        end = j;
-                    }
-                }
-        return s.substring(start, end + 1);
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < N; i++){
+            helper(s, i, 0, sb);
+            helper(s, i, 1, sb);
         }
+        return sb.toString();
+        
+        
+        }
+    private void helper(String s, int center, int offset, StringBuilder sb){
+        int left = center, right = center + offset;
+        int N = s.length();
+        while(left >= 0 && right < N && s.charAt(left) == s.charAt(right)){
+            left--;
+            right++;
+        }
+        String cur = s.substring(left+1, right); //[i,j)
+        if (cur.length() > sb.length()){
+            sb.setLength(0);
+            sb.append(cur);
+        }
+        
+    }
 }
