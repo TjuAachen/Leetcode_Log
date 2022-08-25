@@ -24,17 +24,11 @@ class Solution {
                 int index = deque.poll();
                 //add i-1, i+1
                 if (index == arr.length - 1) return step_count;
-                if(index - 1 >= 0 && !visited[index-1]){
-                    deque.offer(index-1);
-                    visited[index-1] = true;
-                }
-                if(index + 1 < arr.length && !visited[index+1]){
-                    deque.offer(index+1);
-                    visited[index+1] = true;
-                }
                 List<Integer> neighbors = valueToIndex.get(arr[index]);
+                neighbors.add(index-1);
+                neighbors.add(index+1);
                 for(int idx : neighbors){
-                    if (!visited[idx]){
+                    if (idx < arr.length && idx >= 0 && !visited[idx]){
                     //    if (idx == arr.length - 1) return step_count;
                         deque.offer(idx);
                         visited[idx] = true;
