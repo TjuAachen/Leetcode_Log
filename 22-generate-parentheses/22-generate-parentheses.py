@@ -1,33 +1,29 @@
-class Solution:
-    def generateParenthesis(self, n: int) -> List[str]:
-        track = []
-        global rolling
-        rolling = 0
+class Solution(object):
+    def generateParenthesis(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
         res = set()
-        def backtracking(n):
-            global rolling
-            if n == 0 and rolling == 0:
-                res.add("".join(track))
+
+        #n pairs of parentheses
+        def combination(n, stack, temp):
+            if n == 0 and not stack:
+                res.add(temp)
                 return
-            elif n == 0:
-                return
-            for i in ["(",")"]:
-                if i == "(":
-                    rolling += 1
-                    track.append("(")
-                    backtracking(n-1)
-                    track.pop()
-                    rolling -= 1
-                elif i == ")" and rolling > 0:
-                    rolling -= 1
-                    track.append(")")
-                    backtracking(n-1)
-                    track.pop()
-                    rolling += 1
-        backtracking(2*n)
+            #put '('
+            if n > 0:
+                stack.append('(')
+                combination(n - 1, stack, temp + '(')
+                stack.pop()
+            #put ')'
+            if stack:  
+                popped = stack.pop()
+                combination(n, stack, temp + ')')
+                stack.append(popped)
+        combination(n, [], '')
         return list(res)
-                
-                
+            
+            
                 
             
-        
