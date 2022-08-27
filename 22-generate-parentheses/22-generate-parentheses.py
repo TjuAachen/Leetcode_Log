@@ -7,21 +7,17 @@ class Solution(object):
         res = set()
 
         #n pairs of parentheses
-        def combination(n, stack, temp):
-            if n == 0 and not stack:
+        def combination(n, rolling, temp):
+            if n == 0 and rolling == 0:
                 res.add(temp)
                 return
-            #put '('
             if n > 0:
-                stack.append('(')
-                combination(n - 1, stack, temp + '(')
-                stack.pop()
-            #put ')'
-            if stack:  
-                popped = stack.pop()
-                combination(n, stack, temp + ')')
-                stack.append(popped)
-        combination(n, [], '')
+                if rolling > 0:
+                    combination(n , rolling - 1, temp + ')')
+                combination(n - 1, rolling + 1, temp + '(')
+            else:
+                combination(n, rolling - 1, temp + ')')
+        combination(n, 0, '')
         return list(res)
             
             
