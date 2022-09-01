@@ -1,35 +1,25 @@
-class Solution {
-  //  private HashMap<Pair, Boolean> memo = new HashMap<>();
-    private HashMap<Integer, Integer> distToInd = new HashMap<>();
+public class Solution {
     public boolean canCross(int[] stones) {
-        if(stones[1] > 1)return false;
-        int N = stones.length;
-        boolean res = false;
-        
-        for(int i = 0; i < N; i++){
-            distToInd.put(stones[i], i);
+        int[][] memo = new int[stones.length][stones.length];
+        for (int[] row : memo) {
+            Arrays.fill(row, -1);
         }
-        
-        boolean[][] dp = new boolean[N][N];
-        dp[0][0] = true;
-        for(int position = 1; position < N; position++){
-            int real_dist = stones[position];
-            for(int step = 1; step <= Math.min(real_dist, N - 1); step++){
-                if(distToInd.containsKey(real_dist - step)){
-                    int new_idx = distToInd.get(real_dist - step);
-                    
-                    dp[position][step] |= dp[new_idx][step];
-                    if (step + 1 < N)
-                        dp[position][step] |= dp[new_idx][step+1];
-                    if(step - 1 >= 0)
-                        dp[position][step] |= dp[new_idx][step-1];
-                    }
-                if(position == N - 1)
-                    res |= dp[position][step];
+        return can_Cross(stones, 0, 0, memo) == 1;
+    }
+    public int can_Cross(int[] stones, int ind, int jumpsize, int[][] memo) {
+        if (memo[ind][jumpsize] >= 0) {
+            return memo[ind][jumpsize];
+        }
+        for (int i = ind + 1; i < stones.length; i++) {
+            int gap = stones[i] - stones[ind];
+            if (gap >= jumpsize - 1 && gap <= jumpsize + 1) {
+                if (can_Cross(stones, i, gap, memo) == 1) {
+                    memo[ind][gap] = 1;
+                    return 1;
+                }
             }
         }
-        return res;
-        
+        memo[ind][jumpsize] = (ind == stones.length - 1) ? 1 : 0;
+        return memo[ind][jumpsize];
     }
-
 }
