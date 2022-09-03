@@ -1,36 +1,39 @@
 class Solution {
     public int divide(int dividend, int divisor) {
-        if (dividend == 0x80000000 && divisor == -1) {
-            return Integer.MAX_VALUE;
-        }
-        int negative = 2;
-        if (dividend > 0) {
-            dividend = -dividend;
-            negative--;
-        }
-        if (divisor > 0) {
-            negative--;
-            divisor = -divisor;
-        }
+        int sign = 1;
+        if(dividend < 0) sign =-sign;
+        if(divisor < 0) sign = -sign;
         
-        int result = divideCore(dividend, divisor);
-        return negative == 1? -result : result;
+        if(dividend > 0)dividend = -dividend;
+        if(divisor > 0) divisor = -divisor;
         
+        if(sign == 1 && dividend == Integer.MIN_VALUE && divisor == -1)return Integer.MAX_VALUE;
+        int ans = this.helper(dividend, divisor);
+        return ans * sign;
         
     }
-    private int divideCore(int dividend, int divisor) {
+    public int helper(int dividend, int divisor){
         int ans = 0;
-        while (dividend <= divisor) {
-            int value = divisor;
-            int quotient = 1;
-            while (value >= 0xc0000000 && value + value >= dividend) {
-                value += value;
-                quotient += quotient;
+        int temp_divisor = 0;
+        int quotient = 0;
+        while(dividend <= divisor){
+            temp_divisor = divisor;
+            quotient = 0;
+            while(temp_divisor + temp_divisor >= dividend&& temp_divisor >= 0xc0000000){
+                temp_divisor += temp_divisor;
+                quotient += 1;
             }
-            dividend -= value;
-            ans += quotient;
+            
+            dividend -= temp_divisor;
+            ans += (1<<quotient);
         }
+        
         return ans;
+        
+        
+        
+        
     }
+
     
 }
