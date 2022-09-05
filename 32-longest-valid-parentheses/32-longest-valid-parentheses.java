@@ -1,35 +1,28 @@
 class Solution {
     public int longestValidParentheses(String s) {
-        //find the leftmost starting point
-        LinkedList<Integer> stack = new LinkedList<>();
-        int res = 0;
+        LinkedList<Integer> potentialStart = new LinkedList<>();
+        int ans = 0;
         for(int i = 0; i < s.length(); i++){
-            char cur_char = s.charAt(i);
-            //new starting point
-            if(cur_char == '('){
-                stack.add(i);
-            }else{
-                if (!stack.isEmpty()){
-                    int idx = stack.pollLast();
-                    if(!stack.isEmpty()){
-                        res = Math.max(res, i - stack.peekLast());
-                    }else if(s.charAt(idx) == '('){
-                        res = Math.max(res, i + 1);
-                    }else{
-                        stack.offerLast(i);
-                    }
-                    
-                }else{
-                    stack.offerLast(i);
-                }
-                
+            char curChar = s.charAt(i);
+            if(curChar == '('){
+                potentialStart.addLast(i);
+            }else if(potentialStart.isEmpty()){
+                    potentialStart.addLast(i);    
             }
-           // System.out.println(res);
-            
-            
-            
-        }
-        return res;
-        
+            else{
+                    int idx = potentialStart.pollLast();
+                    if(s.charAt(idx) == '('){
+                        if(potentialStart.isEmpty()){
+                        ans = Math.max(ans, i + 1);
+                        }else{
+                        ans = Math.max(ans, i - potentialStart.get(potentialStart.size() - 1));
+                        }
+                    }else{
+                        potentialStart.addLast(i);
+                    }
+                }
+            }
+    return ans;    
     }
+
 }
