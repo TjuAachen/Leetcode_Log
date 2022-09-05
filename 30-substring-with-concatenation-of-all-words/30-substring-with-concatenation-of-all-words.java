@@ -11,6 +11,7 @@ class Solution {
             int prev_end = start;
             for(int end = start + wordLen; end <= start + wordLen * wordNum; end += wordLen){
                 String curString = s.substring(prev_end, end);
+                if (!targetHash.containsKey(curString))break;
                 curHash.computeIfAbsent(curString, k -> 0);
                 curHash.put(curString, curHash.get(curString) + 1);
                 prev_end = end;
