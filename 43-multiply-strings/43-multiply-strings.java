@@ -1,56 +1,45 @@
 class Solution {
     public String multiply(String num1, String num2) {
-        String res = "0";
-        for(int i = num2.length() - 1; i >= 0; i--){
-            String curRes = multiplyOneNum(num1, num2.substring(i, i +1), num2.length() - i - 1);
-            res = add(curRes, res);
-        }
-        return res;
-    }
-
-    public String add(String num1, String num2){
-        if(num1.length() < num2.length()){
-            String temp = num1;
-            num1 = num2;
-            num2 = temp;
+        if (num1.equals("0") || num2.equals("0")) {
+            return "0";
         }
         StringBuilder ans = new StringBuilder();
-        int carry = 0;
-        for(int i = num1.length()-1; i >= 0; i--){
-            int num2Val = 0;
-            if(i-num1.length() + num2.length() >= 0){
-                int k = i-num1.length() + num2.length();
-            num2Val = Integer.valueOf(num2.substring(k, k+1));
+        StringBuilder firstNumber = new StringBuilder(num1);
+        StringBuilder secondNumber = new StringBuilder(num2);
+        
+        //reverse both the numbers
+        firstNumber.reverse();secondNumber.reverse();
+        
+        for(int i = 0; i < secondNumber.length() + firstNumber.length(); i++){
+            ans.append('0');
+        }
+        
+        for(int place2 = 0; place2 < secondNumber.length(); place2++)
+            for(int place1 = 0; place1 < firstNumber.length(); place1++){
+                int digit1 = firstNumber.charAt(place1) - '0';
+                int digit2 = secondNumber.charAt(place2) - '0';
+                
+                int currentPos = place1 + place2;
+                int carry = ans.charAt(currentPos) - '0';
+                int multiplication = digit1*digit2 + carry;
+                
+                ans.setCharAt(currentPos, (char) (multiplication%10 +'0'));
+                
+                int value = (ans.charAt(currentPos + 1) - '0') + multiplication / 10;
+                ans.setCharAt(currentPos + 1, (char)(value + '0'));
+                
             }
-            int num1Val = Integer.valueOf(num1.substring(i,i+1));
-            int sumRes = num1Val + num2Val + carry;
-            String digit = Integer.toString(sumRes%10);
-            ans.insert(0, digit);
-            carry = sumRes/10;  
+        //Pop excess 0 from the rear of answer
+        if(ans.charAt(ans.length() - 1) == '0'){
+            ans.deleteCharAt(ans.length() - 1);
         }
-        if(carry > 0)ans.insert(0, Integer.toString(carry));
+        ans.reverse();
         return ans.toString();
+        
+        
+        
+        
+        
     }
-    public String multiplyOneNum(String num1, String num2, int zeroNum){
-        StringBuilder tempStr = new StringBuilder();
-        String zero = "";
-        for(int m = 0; m < zeroNum; m++){
-            zero += "0";
-        }
-        tempStr.append(zero);
-        int carry = 0;
-        int multiplier = Integer.valueOf(num2.toString());
-        for(int i = num1.length() - 1; i >= 0; i--){
-            char curNum = num1.charAt(i);
-            int num = Character.getNumericValue(curNum);
-            int tempRes = num * multiplier + carry;
-            tempStr.insert(0, Integer.toString(tempRes%10));
-            carry = tempRes/10;
-        }
-        if(carry > 0){
-            tempStr.insert(0, Integer.toString(carry));
-        }
-        if (tempStr.substring(0,1).equals("0")) return "0";
-        return tempStr.toString();  
-    }
+
 }
