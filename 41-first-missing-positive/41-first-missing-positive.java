@@ -1,47 +1,34 @@
 class Solution {
     public int firstMissingPositive(int[] nums) {
-        //1 是否在其中
-        //if no 1, 1 is the missing
-        int min = Integer.MAX_VALUE;
-        for(int k = 0; k < nums.length; k++){
-            if (nums[k] < 0)continue;
-            if(nums[k] == 0){
-                nums[k] = -1;
-                continue;
+        //decide whether there is 1
+        //set < 0 and > n as the number
+        int N = nums.length;
+        int contains = 0;
+        for(int i = 0; i < N; i++){
+            if(nums[i] == 1)
+            {
+                contains++;
+            }else if(nums[i] <= 0 || nums[i] > N){
+                nums[i] = 1;
             }
-            min = Math.min(nums[k], min);      
         }
-        if(min != 1)return 1;
-        //不能超过nums的长度
-        int upperLimit = nums.length + 1;
-        for(int i = 0; i < nums.length;){
-            int curVal = nums[i];
-            if(curVal >= upperLimit||curVal <= 0)
-            {
-                i++;
-                continue;
-            }
-             
-            int idx = curVal - 1;
-            int targetVal = nums[idx];
-            if(targetVal >= upperLimit || targetVal <= 0)
-            {
-                nums[idx] = 0;
-                i++;
+        if(contains == 0)return 1;
+        for(int i = 0; i < N; i++){
+            int idx = Math.abs(nums[i]);
             
-            }else if(idx == i){
-                nums[i] = 0;
-                i++;
+            if(idx == N){
+                nums[0] = -Math.abs(nums[0]);
             }else{
-                nums[i] = targetVal;
-                nums[idx] = 0;
+                nums[idx] = -Math.abs(nums[idx]);
             }
         }
-        int j = 0;
-        while(j < nums.length){
-            if(nums[j] != 0) return j+1;
-            j++;
+        
+        for(int j = 1; j < N; j++){
+            if(nums[j] > 0)return j;
         }
-        return nums.length + 1;            
-        }    
+        if(nums[0] > 0)return N;
+        return N + 1;
+        
+
+    }
 }
