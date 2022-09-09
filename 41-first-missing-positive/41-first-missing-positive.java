@@ -14,19 +14,14 @@ class Solution {
         }
         if(contains == 0)return 1;
         for(int i = 0; i < N; i++){
-            int idx = Math.abs(nums[i]);
+            int idx = Math.abs(nums[i]) - 1;
             
-            if(idx == N){
-                nums[0] = -Math.abs(nums[0]);
-            }else{
-                nums[idx] = -Math.abs(nums[idx]);
-            }
+            nums[idx] = -Math.abs(nums[idx]);
         }
         
-        for(int j = 1; j < N; j++){
-            if(nums[j] > 0)return j;
+        for(int j = 0; j < N; j++){
+            if(nums[j] > 0)return j + 1;
         }
-        if(nums[0] > 0)return N;
         return N + 1;
         
 
