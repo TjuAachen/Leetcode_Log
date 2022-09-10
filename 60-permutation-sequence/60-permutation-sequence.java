@@ -1,34 +1,37 @@
 class Solution {
-    private String res;
-    private Set<Integer> visited = new HashSet<>();
-    private int N;
-    private int curNum = 1;
     public String getPermutation(int n, int k) {
-        N = n + 1;
-        permutation(n, new StringBuilder(), k);
-        return res;
-    }
-    public boolean permutation(int n, StringBuilder temp, int k){
-
-        if(n == 0){
-            if(curNum == k){
-                res = temp.toString();
-                return true;
-            }
-            curNum++;
-            return false;
+        StringBuilder res = new StringBuilder();
+        int num = n;
+        Set<Integer> visited = new HashSet<>();
+        while(num > 0){
+        int curDigit = 0;
+        while((curDigit + 1)*factorial(num-1) < k){
+            curDigit+=1;
         }
-        for(int i = 1; i < N; i++){
-
+        int count = 0;
+        for(int i = 1; i < n + 1; i++){
             if(visited.contains(i))continue;
-            
-            visited.add(i);
-            String m = String.valueOf(i);
-            temp.append(m);
-            if (permutation(n - 1, temp, k)) return true;
-            temp.setLength(temp.length() -1);
-            visited.remove(i);
+            if(curDigit == count){
+                res.append(String.valueOf(i));
+                visited.add(i);
+            }
+            count++;
         }
-        return false;
+        k = k - curDigit*factorial(num-1);
+        num--;
+        }
+        return res.toString();
     }
+    public int factorial(int n){
+        int ans  = 1;
+        while(n > 0){
+            ans *= n;
+            n = n -1;
+        }
+        return ans;
+        
+        
+        
+    }
+
 }
