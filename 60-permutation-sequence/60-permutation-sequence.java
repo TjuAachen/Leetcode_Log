@@ -4,10 +4,7 @@ class Solution {
         int num = n;
         Set<Integer> visited = new HashSet<>();
         while(num > 0){
-        int curDigit = 0;
-        while((curDigit + 1)*factorial(num-1) < k){
-            curDigit+=1;
-        }
+        int curDigit = (k - 1)/factorial(num-1);
         int count = 0;
         for(int i = 1; i < n + 1; i++){
             if(visited.contains(i))continue;
