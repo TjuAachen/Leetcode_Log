@@ -4,24 +4,15 @@ class Solution:
         count = 0
         
         
-        properties.sort(reverse = True)
+        properties.sort(reverse = True, key = lambda x:(x[0],-x[1]))
         
-        defenseMax = []
-        attackProperty = SortedList(key = lambda x: -x)
-        
+        maxDefense = 0
         i = 0
+      #  print(properties)
         for attack, defense in properties:
-            if defenseMax and defenseMax[-1] < defense:
-                defenseMax.append(defense)
-            elif defenseMax:
-                tmp = defenseMax[-1]
-                defenseMax.append(tmp)
-            else:
-                defenseMax.append(defense)
-            attackCount = attackProperty.bisect_left(attack)
-            if attackCount > 0 and defenseMax[attackCount - 1] > defense:
-                count += 1
-            attackProperty.add(attack)
+            if maxDefense > defense:
+                count+= 1
+            maxDefense = max(maxDefense, defense)
         return count
             
             
