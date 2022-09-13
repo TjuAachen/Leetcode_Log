@@ -4,13 +4,13 @@
 
 <p>Extra spaces between words should be distributed as evenly as possible. If the number of spaces on a line does not divide evenly between words, the empty slots on the left will be assigned more spaces than the slots on the right.</p>
 
-<p>For the last line of text, it should be left-justified and no extra space is inserted between words.</p>
+<p>For the last line of text, it should be left-justified, and no extra space is inserted between words.</p>
 
 <p><strong>Note:</strong></p>
 
 <ul>
 	<li>A word is defined as a character sequence consisting of non-space characters only.</li>
-	<li>Each word's length is guaranteed to be greater than 0 and not exceed maxWidth.</li>
+	<li>Each word's length is guaranteed to be greater than <code>0</code> and not exceed <code>maxWidth</code>.</li>
 	<li>The input array <code>words</code> contains at least one word.</li>
 </ul>
 
@@ -35,7 +35,7 @@
 &nbsp; "shall be &nbsp; &nbsp; &nbsp; &nbsp;"
 ]
 <strong>Explanation:</strong> Note that the last line is "shall be    " instead of "shall     be", because the last line must be left-justified instead of fully-justified.
-Note that the second line is also left-justified becase it contains only one word.</pre>
+Note that the second line is also left-justified because it contains only one word.</pre>
 
 <p><strong>Example 3:</strong></p>
 
