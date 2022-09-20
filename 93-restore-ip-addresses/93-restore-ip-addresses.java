@@ -10,7 +10,7 @@ class Solution {
         if(n>0)temp.append(".");
         for(int i = 0; i < Math.min(s.length(),3); i++){
             String cur = s.substring(0,i+1);
-            if(cur.charAt(0) == '0' && cur.length() > 1)continue;
+            if(cur.charAt(0) == '0' && i > 0)continue;
         //    System.out.println(cur);
             int curVal = Integer.parseInt(cur);
             if(curVal > 255)break;
