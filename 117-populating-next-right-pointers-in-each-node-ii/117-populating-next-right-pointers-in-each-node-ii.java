@@ -22,63 +22,39 @@ class Node {
 */
 
 class Solution {
+    Node leftMost;
+    Node prev;
     public Node connect(Node root) {
         //input: the root of a non-perfect binary tree
         //output: tree with populated next pointer
-        //1. find the head of the nodes in the upper level
-        //2.go to the next non-null node not equal to cur
-        //3.link the cur to the next, go the next and repeat the same process above
-        Node prev = root;
-        
-        while(prev != null){
-            Node prevCur = prev;
-            Node cur = null;
-            Node nxtHead = null;
-            while(prevCur != null){
-                List<Node> temp = findprevNext(prevCur, cur, nxtHead);
-                prevCur = temp.get(0);
-                cur = temp.get(1);
-                nxtHead = temp.get(2);
+        //while(leftMost != null)
+        //1.cur = leftMost
+        //prev = null
+        //2.process leftMost.left, leftMost.right
+        //set the leftMost for the next level
+        leftMost = root;
+        while(leftMost != null){
+            Node cur = leftMost;
+            prev = null;
+            leftMost = null;
+            while(cur != null){
+                processChild(cur.left);
+                processChild(cur.right);
+                cur = cur.next;
             }
-            prev = nxtHead;
         }
         return root;
-        
-        
-        
-        
-        
     }
-    public List<Node> findprevNext(Node prevCur, Node cur, Node nxtHead){
-        while(prevCur != null){
-            if(prevCur.left != null && prevCur.left != cur){
-                if(cur != null){
-                cur.next = prevCur.left;
-                cur = cur.next;
-                }else{
-                    cur = prevCur.left;
-                    nxtHead = cur;
-                }
-                break;
-            }
-            if(prevCur.right != null && prevCur.right != cur){
-                if(cur != null){
-                    cur.next = prevCur.right;
-                    cur = cur.next;
-                }else{
-                    cur = prevCur.right;
-                    nxtHead = cur;
-                }
-                prevCur = prevCur.next;
-                break;
-            }
-            prevCur = prevCur.next;
+    public void processChild(Node childNode){
+        if(childNode == null)return;
+        if(prev == null){
+            prev = childNode;
+            leftMost = childNode;
+        }else{
+            prev.next = childNode;
+            prev = prev.next;
         }
-        List<Node> res = new LinkedList<>();
-        res.add(prevCur);
-        res.add(cur);
-        res.add(nxtHead);
-        return res;
     }
+
         
 }
