@@ -28,14 +28,11 @@ class Solution {
             if(cur.left != null){
                 TreeNode node = getRightMostNode(cur);
                 node.right = cur.right;
-                cur.right = null;
-                TreeNode prev = cur;
-                cur = cur.left;
-                prev.left = null;
+                cur.right = cur.left;
+                cur.left = null;
                 
-            }else{
-                cur = cur.right;
             }
+            cur = cur.right;
         }
         
         
