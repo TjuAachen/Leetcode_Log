@@ -14,28 +14,27 @@
  * }
  */
 class Solution {
-    private LinkedList<Integer> temp = new LinkedList<>();
-    private List<List<Integer>> res = new LinkedList<>();
+
     public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
-        //@input: the root of a binary tree
-        //@output a list of the node values sum equal to targetSum
-        //@edge case
-        //1.recursive/backtracking, select the cur root and change the target sum
-        //add cur root to the temp
-        //2.if leaf is reached and target sum == 0, add temp to the res
-        if(root == null)return res;
-        if(root.left == null && root.right == null && targetSum == root.val){
-            temp.addLast(root.val);
-            res.add((List)temp.clone());
-            temp.pollLast();
-            return res;
+        List<List<Integer>> pathsList = new ArrayList<List<Integer>>();
+        List<Integer> pathNodes = new ArrayList<Integer>();
+        recurseTree(root, targetSum, pathNodes, pathsList);
+        return pathsList;
+        
+        
+        
+    }
+    
+    private void recurseTree(TreeNode node, int remainingSum, List<Integer> pathNodes, List<List<Integer>> pathsList){
+        if(node == null)return;
+        pathNodes.add(node.val);
+        //check if the current node is a leaf and also if it equals our remaining sum. If it does, add the path to our list of paths.
+        if(remainingSum == node.val && node.left == null && node.right == null){
+            pathsList.add(new ArrayList<>(pathNodes));
+        }else{
+            recurseTree(node.left, remainingSum - node.val, pathNodes, pathsList);
+            recurseTree(node.right, remainingSum - node.val, pathNodes, pathsList);
         }
-        temp.add(root.val);
-        pathSum(root.left, targetSum - root.val);
-        temp.pollLast();
-        temp.add(root.val);
-        pathSum(root.right, targetSum - root.val);
-        temp.pollLast();
-        return res;
+        pathNodes.remove(pathNodes.size() - 1);
     }
 }
