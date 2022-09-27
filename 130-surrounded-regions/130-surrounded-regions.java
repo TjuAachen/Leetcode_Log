@@ -27,19 +27,19 @@ class Solution {
         //first row
         for(int col = 0; col < ncol; col++){
             if(board[0][col] == 'O'){
-                dfs(0, col, board, new HashSet<>());
+                dfs(0, col, board);
             }
             if(board[nrow - 1][col] == 'O'){
-                dfs(nrow - 1, col, board, new HashSet<>());
+                dfs(nrow - 1, col, board);
             }
         }
         
         for(int row = 0; row < nrow; row++){
             if(board[row][0] == 'O'){
-                dfs(row, 0, board, new HashSet<>());
+                dfs(row, 0, board);
             }
             if(board[row][ncol - 1] == 'O'){
-                dfs(row, ncol - 1, board, new HashSet<>());
+                dfs(row, ncol - 1, board);
             }
         }
         
@@ -47,18 +47,17 @@ class Solution {
         
         
     }
-    public void dfs(int row, int col, char[][] board, Set<Pair<Integer, Integer>> visited){
+    public void dfs(int row, int col, char[][] board){
         int[][] directions = {{1,0},{0,1},{0,-1},{-1,0}};
         int nrow = board.length, ncol = board[0].length;
         Pair key = new Pair(row, col);
         if(row >= nrow || row < 0 || col >= ncol || col < 0)return;
         if(board[row][col] != 'O')return;
-        if(visited.contains(key))return;
+        if(board[row][col] == 'M')return;
         board[row][col] = 'M';
-        visited.add(key);
         for( int[] direction : directions){
             int x = row + direction[0], y = col + direction[1];
-            dfs(x, y, board, visited);
+            dfs(x, y, board);
         }
         
         
