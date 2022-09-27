@@ -51,15 +51,14 @@ class Solution {
         int[][] directions = {{1,0},{0,1},{0,-1},{-1,0}};
         int nrow = board.length, ncol = board[0].length;
         Pair key = new Pair(row, col);
+        if(row >= nrow || row < 0 || col >= ncol || col < 0)return;
         if(board[row][col] != 'O')return;
+        if(visited.contains(key))return;
         board[row][col] = 'M';
         visited.add(key);
         for( int[] direction : directions){
             int x = row + direction[0], y = col + direction[1];
-            Pair newKey = new Pair(x, y);
-            if(x < nrow && x >= 0 && y < ncol && y >= 0 && !visited.contains(newKey)){
-                dfs(x, y, board, visited);
-            }
+            dfs(x, y, board, visited);
         }
         
         
