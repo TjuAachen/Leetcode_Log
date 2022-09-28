@@ -1,28 +1,47 @@
 class Solution {
     public List<List<String>> partition(String s) {
-        List<List<String>> res = new ArrayList<>();
-        //find all palindromic substring
-        int N = s.length();
-        boolean[][] dp = new boolean[N][N];
-        for(int i = N - 1; i >= 0; i--)
-            for(int j = i; j < N; j++)
-                if(s.charAt(i) == s.charAt(j) &&(j - i <= 2 || dp[i+1][j-1])){
-                    dp[i][j] = true;
-                }
-        backtracking(s, 0, new ArrayList<>(), res, dp);
+        //@input : string s
+        //@output: all possible palindrome partitioning of s
+        //@edge case : no
+        //@breaking down problem:
+        // 1. backtracking
+        // 2. if come to the end, then terminate
+        // 3. in each step, select the palindrome one
+        List<List<String>> res = new LinkedList<>();
+        List<String> temp = new LinkedList<>();
+        backtracking(s, 0, res, temp);
         return res;
         
+        
+        
     }
-    private void backtracking(String s, int pos, List<String> temp, List<List<String>> res, boolean[][] dp){
-        if(pos == s.length()){
-            res.add(new ArrayList<>(temp));
+    public boolean isPalindrome(String s){
+        int n = s.length();
+        int i = 0;
+        while(i < n / 2){
+            if(s.charAt(i) != s.charAt(n - 1 - i))return false;
+            i++;
+        }
+        return true;
+    }
+    
+    public void backtracking(String s, int curPointer, List<List<String>> res, List<String> temp){
+        //termination
+        
+        if(curPointer == s.length()){
+            res.add(new LinkedList<>(temp));
             return;
         }
-        for(int i = pos; i < s.length(); i ++)
-            if (dp[pos][i]){
-                temp.add(s.substring(pos, i + 1));
-                backtracking(s, i + 1, temp, res, dp);
+        for(int i = curPointer; i < s.length(); i++){
+            //select
+            String curPartition = s.substring(curPointer, i + 1);
+            if(isPalindrome(curPartition)){
+                temp.add(curPartition);
+                backtracking(s, i + 1, res, temp);
                 temp.remove(temp.size() - 1);
             }
+        }
     }
+    
+    
 }
