@@ -11,24 +11,28 @@ class Solution {
         // 4. return the total number of ways as the final result
         //5. when the string is empty, terminate the recursion
         int n = s.length();
-        int[] dp = new int[n + 1];
-        
-        dp[0] = 1;
-        
+        int oneBack = 1, twoBack = 0;
+        int temp = 0;
         for(int i = 1; i < n + 1; i++){
             int firstNum = Integer.parseInt(s.substring(i-1, i));
+            temp = 0;
             if(firstNum != 0){
-                dp[i] += dp[i - 1];
+                temp += oneBack;
             }
             if (i > 1){
                 int secondNum = Integer.parseInt(s.substring(i-2, i - 1));
                 int totalNum = secondNum * 10 + firstNum;
                 if(totalNum <= 26 && secondNum > 0){
-                    dp[i] += dp[i - 2];
+                    temp += twoBack;
                 }
             }
+            twoBack = oneBack;
+            oneBack = temp;
+            
+            
+            
         }
-        return dp[n];
+        return temp;
     }
     
 
