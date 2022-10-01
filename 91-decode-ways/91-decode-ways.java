@@ -1,37 +1,40 @@
 class Solution {
-    Map<Integer, Integer> memo = new HashMap<>();
+    
     public int numDecodings(String s) {
-        //exclude leading zeros
-        if(s.charAt(0) == '0')return 0;
-        if(s.length() == 1 && !s.equals("0"))return 1;
-        //no leading zeros
-        return findNum(s, 0);
-        
+        //@input: string
+        //@output : number of ways to decode
+        //@edge case : leading 0 
+        //@breaking down problem:
+        // 1. set the recursion funciton with String s, curRes as input, the final res as output. 
+        // 2. in each recursion step, select the first or the first two numbers as the current choice.
+        // 3. then the total number of ways is equal to the sum of returned values from the two sub-functions 
+        // 4. return the total number of ways as the final result
+        //5. when the string is empty, terminate the recursion
+        return numCurDecodings(s, new HashMap<String, Integer>());
     }
     
-    public int findNum(String s, int start){
-        if(memo.containsKey(start))return memo.get(start);
-        if(start == s.length())return 1;
-        if(start == s.length() - 1){
-            if(s.charAt(start) == '0')return 0;
+    public int numCurDecodings(String s, Map<String, Integer> memo){
+        if(s.length() == 0){
             return 1;
         }
-        int ans = 0;
-        //take 1
-        if(s.charAt(start) == '0')return 0;
-        ans += findNum(s, start + 1);
-        //take 2
-        String twoNum = s.substring(start, start + 2);
-        int num = Integer.parseInt(twoNum);
-        //exclude the leading zero
-        if(num <= 26 && num >= 1){
-            ans += findNum(s, start + 2);
+        if(memo.containsKey(s))return memo.get(s);
+        int curRes = 0;
+        int firstNum = Integer.parseInt(s.substring(0,1));
+        if (firstNum != 0){
+            curRes += numCurDecodings(s.substring(1), memo);
         }
-        memo.put(start, ans);
-        return ans;
+        if (firstNum <= 2 && firstNum > 0 && s.length() > 1){
+            int secondNum = Integer.parseInt(s.substring(1,2));
+            int firstTwoNum = firstNum * 10 + secondNum;
+            
+            if(firstTwoNum <= 26)curRes += numCurDecodings(s.substring(2), memo);
+        }
+        memo.put(s, curRes);
+        return curRes;
+        
         
         
     }
-    
+
     
 }
