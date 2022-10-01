@@ -10,31 +10,28 @@ class Solution {
         // 3. then the total number of ways is equal to the sum of returned values from the two sub-functions 
         // 4. return the total number of ways as the final result
         //5. when the string is empty, terminate the recursion
-        return numCurDecodings(s, new HashMap<String, Integer>());
+        int n = s.length();
+        int[] dp = new int[n + 1];
+        
+        dp[0] = 1;
+        
+        for(int i = 1; i < n + 1; i++){
+            int firstNum = Integer.parseInt(s.substring(i-1, i));
+            if(firstNum != 0){
+                dp[i] += dp[i - 1];
+            }
+            if (i > 1){
+                int secondNum = Integer.parseInt(s.substring(i-2, i - 1));
+                int totalNum = secondNum * 10 + firstNum;
+                if(totalNum <= 26 && secondNum > 0){
+                    dp[i] += dp[i - 2];
+                }
+            }
+        }
+        return dp[n];
     }
     
-    public int numCurDecodings(String s, Map<String, Integer> memo){
-        if(s.length() == 0){
-            return 1;
-        }
-        if(memo.containsKey(s))return memo.get(s);
-        int curRes = 0;
-        int firstNum = Integer.parseInt(s.substring(0,1));
-        if (firstNum != 0){
-            curRes += numCurDecodings(s.substring(1), memo);
-        }
-        if (firstNum <= 2 && firstNum > 0 && s.length() > 1){
-            int secondNum = Integer.parseInt(s.substring(1,2));
-            int firstTwoNum = firstNum * 10 + secondNum;
-            
-            if(firstTwoNum <= 26)curRes += numCurDecodings(s.substring(2), memo);
-        }
-        memo.put(s, curRes);
-        return curRes;
-        
-        
-        
-    }
+
 
     
 }
