@@ -1,27 +1,28 @@
 class Solution {
-    final int MOD = 1000000007;
-    
-    int waysToTarget(Integer[][] memo, int diceIndex, int n, int currSum, int target, int k) {
-        // All the n dice are traversed, the sum must be equal to target for valid combination
-        if (diceIndex == n) {
-            return currSum == target ? 1 : 0;
-        }
-        
-        // We have already calculated the answer so no need to go into recursion
-        if (memo[diceIndex][currSum] != null) {
-            return memo[diceIndex][currSum];
-        }
-        
-        int ways = 0;
-        // Iterate over the possible face value for current dice
-        for (int i = 1; i <= Math.min(k, target - currSum); i++) {
-            ways = (ways + waysToTarget(memo, diceIndex + 1, n, currSum + i, target, k)) % MOD;
-        }
-        return memo[diceIndex][currSum] = ways;
-    }
-    
+    Map<String, Integer> memo = new HashMap<>();
+    int MODULO = 1000000007;
     public int numRollsToTarget(int n, int k, int target) {
-        Integer[][] memo = new Integer[n + 1][target + 1];
-        return waysToTarget(memo, 0, n, 0, target, k);
+        //@input : n dice and k faces from 1 to k, target
+        //@output : number of ways to get the target
+        //@edge case : large integer, modulo 10^9 + 7
+        //@breaking down the problem:
+        //1. permutation with repeatition + memo
+        //2. recursion. 
+        //2.1 In each recursion, if in memo, return
+        //2.2 if target == 0, return 1
+        //2.3 if target < 0, return 0
+        //3. select from 1 to k, 
+        int[][] memo = new int[n + 1][target + 1];
+        memo[0][0] = 1;
+        for(int diceIndex = 1; diceIndex < n + 1; diceIndex++)
+            for(int remainingSum = 1; remainingSum < target + 1; remainingSum++){
+                for(int choice = 1; choice <= Math.min(k, remainingSum); choice++){
+                    memo[diceIndex][remainingSum] = (memo[diceIndex][remainingSum]+memo[diceIndex - 1][remainingSum - choice])%MODULO;
+                }
+            }
+        return memo[n][target];
+        
+        
+        
     }
 }
