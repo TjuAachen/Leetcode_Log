@@ -11,11 +11,13 @@ class Solution:
             if left + 1 < n and colors[left + 1] == colors[left]:
                 right = left
                 heap = []
+                curTotal = 0
+                curMax = 0
                 while(right < n and colors[right] == colors[left]):
-                    heappush(heap, neededTime[right])
+                    curMax = max(curMax, neededTime[right])
+                    curTotal += neededTime[right]
                     right += 1
-                while(len(heap) > 1):
-                    ans += heappop(heap)
+                ans += curTotal - curMax
                 left = right
             else:
                 left += 1
