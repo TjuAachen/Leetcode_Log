@@ -15,7 +15,8 @@ class MyCalendarTwo:
         if res >= 3:
             self.diff[start] = self.diff.get(start, 0) - 1
             self.diff[end] = self.diff.get(end, 0) + 1
-
+            if self.diff[start] == 0:
+                del self.diff[start]
             
             return False
         return True
