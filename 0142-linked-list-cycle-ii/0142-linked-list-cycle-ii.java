@@ -12,23 +12,27 @@
 public class Solution {
     public ListNode detectCycle(ListNode head) {
         if(head == null)return null;
-        ListNode slow = head;
-        ListNode fast = head;
         //如何照顾边边角角
-        while(fast != null && fast.next != null){
-            slow = slow.next;
-            fast = fast.next.next;
-            if(slow == fast){
-                break;
-            }
-        }
-        if(fast == null || fast.next == null)return null;
-        slow = head;
+        ListNode fast = getIntersect(head);
+        if(fast == null)return null;
+        ListNode slow = head;
         while(slow != fast){
             slow = slow.next;
             fast = fast.next;
         }
         return fast;
 
+    }
+    public ListNode getIntersect(ListNode head){
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast){
+                return slow;
+            }
+        }
+        return null;
     }
 }
