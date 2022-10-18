@@ -16,7 +16,6 @@ class Solution:
                 deleted = right - 1- left - max(windowHash.values())
             windowHash[curChar] += 1
             deleted = right - left - max(windowHash.values())
-            print(left, right, windowHash, deleted)
             if deleted <= k:
                 curLongest = right - left
             ans = max(curLongest, ans)
