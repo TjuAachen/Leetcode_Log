@@ -9,15 +9,14 @@ class Solution:
         while(right < n):
             curChar = s[right]
             right += 1
+            windowHash[curChar] += 1
+            deleted = right - left - max(windowHash.values())
             while(left < right and deleted > k):
                 leftChar = s[left]
                 left += 1
                 windowHash[leftChar] -= 1
-                deleted = right - 1- left - max(windowHash.values())
-            windowHash[curChar] += 1
-            deleted = right - left - max(windowHash.values())
-            if deleted <= k:
-                curLongest = right - left
+                deleted = right - left - max(windowHash.values())
+            curLongest = right - left
             ans = max(curLongest, ans)
         return ans
         
