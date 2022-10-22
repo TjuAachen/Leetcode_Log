@@ -10,25 +10,25 @@ class Solution(object):
         n = len(s)
         ans = float('inf')
         curDict = defaultdict(int)
+        required = len(target)
+        formed = 0
         minString = ""
         while(right < n):
             curChar = s[right]
             curDict[curChar] += 1
             right += 1
-            while(self.isIncluded(curDict, target) and left < right):
+            if curChar in target and curDict[curChar] == target[curChar]:
+                formed += 1
+            while(left < right and formed == required):
                 curLeftChar = s[left]
                 curDict[curLeftChar] -= 1
                 if ans > right - left:
                     minString = s[left : right]
                     ans = right - left
+                if curLeftChar in target and target[curLeftChar] > curDict[curLeftChar] :
+                     formed -= 1
                 left += 1
         return minString
             
-        
-    
-    def isIncluded(self, curDic, target):
-        for char, freq in target.items():
-            if char not in curDic or curDic[char] < freq:
-                return False
-        return True
+
         
