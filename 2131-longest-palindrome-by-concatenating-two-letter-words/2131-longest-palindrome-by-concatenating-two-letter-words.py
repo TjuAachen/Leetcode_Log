@@ -1,23 +1,44 @@
-class Solution:
-    def longestPalindrome(self, words: List[str]) -> int:
-        word_to_index = defaultdict(int)
+class Solution(object):
+    def longestPalindrome(self, words):
+        """
+        :type words: List[str]
+        :rtype: int
+        """
+        pairCount, isRemaining = self.countSymmetricPairs(words)
+        extra = 0
+        if isRemaining:
+            extra = 2
+     #   print(pairCount, extra)
+        return pairCount * 4 + extra
         
+        
+    def countSymmetricPairs(self, words):
         count = 0
-        is_exist_same = False
+        wordFreq = Counter(words)
+        isRemaining = False
+        sameWords = set()
         for i, word in enumerate(words):
-            word_to_index[word] += 1
-        for key, val in word_to_index.items():
-            reversed_key = key[::-1]
-            if reversed_key == key:
-                count += val//2 * 4
-                word_to_index[key] = val - val//2 * 2
-                if word_to_index[key] > 0:
-                    is_exist_same = True
-            elif reversed_key in word_to_index:
-                cur_val = min(word_to_index[reversed_key], val)
-                count += cur_val * 4
-                word_to_index[key] -= cur_val
-                word_to_index[reversed_key] -= cur_val
-        if is_exist_same:
-            count += 2
-        return count
+            symmetricOne = word[1] + word[0]
+            if symmetricOne == word:
+                sameWords.add(word)
+            if symmetricOne == word and word in wordFreq and wordFreq[word] >= 2:
+                wordFreq[word] -= 2
+                count += 1
+                if wordFreq[word] == 0:
+                    del wordFreq[word]
+            elif symmetricOne != word and symmetricOne in wordFreq and word in wordFreq:
+                wordFreq[symmetricOne] -= 1
+                wordFreq[word] -= 1
+                count += 1
+                if wordFreq[symmetricOne] == 0:
+                    del wordFreq[symmetricOne]
+                if wordFreq[word] == 0:
+                    del wordFreq[word]
+        for word in sameWords:
+            if word in wordFreq:
+                return count, True
+        return count, False
+
+                
+                
+        
