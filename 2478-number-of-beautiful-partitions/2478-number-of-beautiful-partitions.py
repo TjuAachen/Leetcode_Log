@@ -16,7 +16,7 @@ class Solution:
         
         for numPiece in range(1, k + 1):
             tot = 0
-            for cur in range(numPiece * minLength, length + 1):
+            for cur in range(numPiece * minLength, length + 1 - (k - numPiece) * minLength):
                 if self.canPartition(cur - minLength, s):
                     tot += dp[numPiece - 1][cur - minLength]%MOD
                 if self.canPartition(cur, s):
