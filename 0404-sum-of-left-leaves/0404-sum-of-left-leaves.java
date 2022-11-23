@@ -16,30 +16,33 @@
 class Solution {
     int res = 0;
     public int sumOfLeftLeaves(TreeNode root) {
-        LinkedList<TreeNode> stack = new LinkedList<>();
-        //pre-order iterative
         TreeNode cur = root;
         
-        int res = 0;
-        
-        while(!stack.isEmpty() || cur != null){
-            
-            while(cur != null){
-                stack.addLast(cur);
+        while(cur != null){
+            if(cur.left != null){
+                TreeNode node = getRightMostNodeOfLeftSubtree(cur);
+                node.right = cur.right;
                 cur = cur.left;
-                if(cur != null && cur.left == null && cur.right == null)
+                if(cur != null && cur.left == null && cur.right == node.right)
                     res += cur.val;
+            }else{
+                cur = cur.right;
             }
-            
-            TreeNode popped = stack.pollLast();
-            cur = popped.right;
-            
         }
         
         return res;
         
+    }
+    
+    public TreeNode getRightMostNodeOfLeftSubtree(TreeNode cur){
         
+        cur = cur.left;
         
+        while(cur.right != null){
+            cur = cur.right;
+        }
+        
+        return cur;
         
         
     }
