@@ -16,17 +16,31 @@
 class Solution {
     int res = 0;
     public int sumOfLeftLeaves(TreeNode root) {
-        if(root.left == null && root.right == null)
-            return 0;
-        if(root.left != null){
-            if(root.left.left == null && root.left.right == null)
-                res += root.left.val;
-            sumOfLeftLeaves(root.left);
-        }
-        if(root.right != null){
-            sumOfLeftLeaves(root.right);
+        LinkedList<TreeNode> stack = new LinkedList<>();
+        //pre-order iterative
+        TreeNode cur = root;
+        
+        int res = 0;
+        
+        while(!stack.isEmpty() || cur != null){
+            
+            while(cur != null){
+                stack.addLast(cur);
+                cur = cur.left;
+                if(cur != null && cur.left == null && cur.right == null)
+                    res += cur.val;
+            }
+            
+            TreeNode popped = stack.pollLast();
+            cur = popped.right;
+            
         }
         
         return res;
+        
+        
+        
+        
+        
     }
 }
