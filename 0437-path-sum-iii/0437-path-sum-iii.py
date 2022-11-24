@@ -5,19 +5,24 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    
+    def __init__(self):
+        self.res = 0
     def pathSum(self, root: Optional[TreeNode], targetSum: int) -> int:
-        res = 0
-        #选择当前root作为startingNode
-        #不选择当前root作为startingNode
         if not root:
             return 0
-        res += self.pathSum(root.left, targetSum)
-        res += self.pathSum(root.right, targetSum)
+        self.targetSum = targetSum
+        self.preorder(root)
         
-        res += self.numOfPathFromNode(root, targetSum)
+        return self.res
+    
+    def preorder(self, root):
+        if not root:
+            return
+        self.res += self.numOfPathFromNode(root, self.targetSum)
+        self.preorder(root.left)
+        self.preorder(root.right)
         
-        return res
+        return
         
     
     
