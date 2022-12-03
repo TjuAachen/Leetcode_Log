@@ -1,131 +1,79 @@
 class Solution {
     public String alienOrder(String[] words) {
         
-        
-        Map<Character, Set<Character>> graph = new HashMap<>();
-        Set<Character> visited = new HashSet<>();
-        
-        
-        if(!buildGraph(words, graph, visited)){
-            return "";
-        }
-        
-        //BFS, topological sort
         StringBuilder res = new StringBuilder();
+        Map<Character, List<Character>> graph = new HashMap<>();
+        Map<Character, Integer> degree = new HashMap<>();
+        
+        
+        initialize(graph, degree, words);
+        
+        if(!buildGraph(graph, degree, words))
+            return "";
+        
+        
+        //bfs, topological sorting
         
         LinkedList<Character> queue = new LinkedList<>();
         
-        Map<Character, Integer> degree = new HashMap<>();
-        
-        for(int i = 0; i < 26; i++){
-            char curChar = (char)('a' + i);
-            
-            if(!visited.contains(curChar))
-                continue;
-            degree.computeIfAbsent(curChar, k -> 0);
-            if(!graph.containsKey(curChar))
-                continue;
-            for(Character nxt : graph.get(curChar)){
-                
-                degree.computeIfAbsent(nxt, k -> 0);
-                degree.put(nxt, degree.get(nxt) + 1);
-            }
-        }
-        
-        for(int i = 0; i < 26; i++){
-            char curChar = (char)('a' + i);
-            if(!degree.containsKey(curChar))
-                continue;    
-            if(degree.get(curChar) == 0){
-                queue.addLast(curChar);
-            }
-            
+        for (Character c : degree.keySet()){
+            if (degree.get(c).equals(0))
+                queue.add(c);
         }
         
         while(!queue.isEmpty()){
+            char popped = queue.pollFirst();
+            res.append(popped);
             
-            char curNode = queue.pollFirst();
-            res.append(curNode);
+            for (Character nxt : graph.get(popped)){
+                degree.put(nxt, degree.get(nxt) - 1);
+                if(degree.get(nxt) == 0)
+                    queue.add(nxt);
+            }
+        }
+        
+        if (res.length() == degree.size())
+            return res.toString();
+        
+        return ""; 
+    }
+        
+    public void initialize(Map<Character, List<Character>> graph, Map<Character, Integer> degree, String[] words){
+        for (String word : words){
+            for (char c : word.toCharArray()){
+                degree.put(c, 0);
+                graph.put(c, new ArrayList<>());
+            }
+        }
+    
+    }
+    
+    public boolean buildGraph(Map<Character, List<Character>> graph, Map<Character, Integer> degree, String[] words){
+        
+        for (int i = 0; i < words.length - 1; i++){
+            String curWord = words[i];
+            String nxtWord = words[i + 1];
             
-            if(!graph.containsKey(curNode))
-                continue;
+            if(curWord.length() > nxtWord.length() && curWord.startsWith(nxtWord))
+                return false;
             
-            for(Character node : graph.get(curNode)){
-                degree.put(node, degree.get(node) - 1);
-                if(degree.get(node) == 0){
-                    queue.addLast(node);
+            for(int k = 0; k < Math.min(curWord.length(), nxtWord.length()); k++){
+                char cur = curWord.charAt(k);
+                char nxt = nxtWord.charAt(k);
+                
+                if(cur != nxt){
+                    graph.get(cur).add(nxt);
+                    degree.put(nxt, degree.get(nxt) + 1);
+                    break;
                 }
             }
         }
         
-
-        if(res.length() == visited.size())
-            return res.toString();
-        
-        return "";
-        
-        
-        
-        
-        
-    }
-    
-    public boolean buildGraph(String[] words, Map<Character, Set<Character>> graph, Set<Character> visited){
-        
-        int num = words.length;
-        
-        for(int i = 0; i < num; i++){
-            String curWord = words[i];
-            String nxtWord = "";
-            
-            for(int j = 0; j < curWord.length(); j++){
-                char m = curWord.charAt(j);
-                visited.add(m);
-            }
-            
-            if(i < num - 1)
-                nxtWord = words[i + 1];
-            
-          //  addEdgesFromWord(curWord, graph);
-            if(!addEdgesFromPair(curWord, nxtWord, graph)){
-                return false;
-            }
-        }
         return true;
+        
+        
     }
     
     
-    public boolean addEdgesFromPair(String word1, String word2, Map<Character, Set<Character>> graph){
-        int p1 = 0;
-        int p2 = 0;
-        
-        int n1 = word1.length();
-        int n2 = word2.length();
-        
-        if(n2 == 0)
-            return true;
-        
-        while(p1 < n1 && p2 < n2){
-            char curChar1 = word1.charAt(p1);
-            char curChar2 = word2.charAt(p2);
-            
-            if(curChar1 == curChar2){
-                p1++;
-                p2++;
-            }else{
 
-                graph.computeIfAbsent(curChar1, k -> new HashSet<Character>());
-                graph.get(curChar1).add(curChar2);
-                return true;
-            }
-        }
-        
-        if(p1 == n1 && p2 <= n2)
-            return true;
-        return false;
-        
-    }
-    
-    
-    
 }
