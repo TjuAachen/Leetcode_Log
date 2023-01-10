@@ -14,51 +14,31 @@
  * }
  */
 class Solution {
-    public boolean check(TreeNode p, TreeNode q) {
-        if (p == null && q == null)
-            return true;
-        if (p == null || q == null)
-            return false;
-        return p.val == q.val;
-    }
-    
+
     public boolean isSameTree(TreeNode p, TreeNode q) {
-        LinkedList<TreeNode> queueP = new LinkedList<>();
-        LinkedList<TreeNode> queueQ = new LinkedList<>();
-        queueP.addLast(p);
-        queueQ.addLast(q);
+        LinkedList<TreeNode> queue = new LinkedList<>();
+        queue.addLast(p);
+        queue.addLast(q);
         
-        while (!queueP.isEmpty() && !queueQ.isEmpty()) {
-            TreeNode poppedP = queueP.pollFirst(), poppedQ = queueQ.pollFirst();
-            if (!check(poppedP, poppedQ)) {
+        while (!queue.isEmpty()) {
+            TreeNode popped1 = queue.pollFirst(), popped2 = queue.pollFirst();
+            if (popped1 == null && popped2 == null)
+                continue;
+            if (popped1 == null || popped2 == null)
                 return false;
-            }
-            
-            if (!nxt(poppedP, poppedQ, queueP, queueQ))
-                return false;        
+            if (popped1.val != popped2.val)
+                return false;
+            queue.addLast(popped1.left);
+            queue.addLast(popped2.left);
+            queue.addLast(popped1.right);
+            queue.addLast(popped2.right);
         }
         
-        if (!queueP.isEmpty() || !queueQ.isEmpty())
-            return false;
         return true;
         
+
   
     }
     
-    public boolean nxt(TreeNode poppedP, TreeNode poppedQ, LinkedList<TreeNode> queueP, LinkedList<TreeNode> queueQ) {
-        if (poppedP == null && poppedQ == null)
-            return true;
-        if (poppedP.left != null && poppedQ.left != null) {
-            queueP.addLast(poppedP.left);
-            queueQ.addLast(poppedQ.left);
-        } else if (poppedP.left != null || poppedQ.left != null)
-            return false;
-        if (poppedP.right != null && poppedQ.right != null) {
-            queueP.addLast(poppedP.right);
-            queueQ.addLast(poppedQ.right);
-        } else if (poppedP.right != null || poppedQ.right != null)
-            return false;        
-        return true;
-    }
     
 }
