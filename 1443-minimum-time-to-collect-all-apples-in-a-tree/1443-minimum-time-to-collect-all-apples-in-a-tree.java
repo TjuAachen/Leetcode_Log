@@ -30,12 +30,10 @@ class Solution {
             if (nxt == parentNode)
                 continue;
             int nxtMin = findMin(nxt, curNode, edges, graph, hasApple);
-            if (nxtMin != -1)
+            if (nxtMin > 0 || hasApple.get(nxt))
                 ans += (nxtMin + 2);
         }
-        
-        if (ans == 0 && !hasApple.get(curNode))
-            return -1;
+
         return ans;
     }
     
