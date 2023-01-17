@@ -1,31 +1,41 @@
 class Solution {
     public int[][] insert(int[][] intervals, int[] newInterval) {
-        LinkedList<int[]> intervalsList = new LinkedList<>();
+        // create a new list for the final answer
+        List<int[]> resIntervals = new LinkedList<>();
+        boolean isPlaced = false;
         
-   //     Arrays.sort(intervals);
-        //add intervals starting before newInterval
-        int idx = 0;
-        while(idx < intervals.length && intervals[idx][1] < newInterval[0]){
-            intervalsList.addLast(intervals[idx++]);
+        for (int[] interval : intervals) {
+            int left = interval[0], right = interval[1];
+            // left non-overlapping intervals add
+            if (right < newInterval[0]) {
+                resIntervals.add(interval);
+            //add right non-overlapping intervals    
+            } else if (left > newInterval[1]) {
+                if (!isPlaced) {
+                    resIntervals.add(newInterval);
+                    isPlaced = true;
+                }
+                resIntervals.add(interval);
+            } else {
+                newInterval[0] = Math.min(newInterval[0], left);
+                newInterval[1] = Math.max(newInterval[1], right);
+            }
         }
         
-        //merge overlapping intervals
-        while(idx < intervals.length && intervals[idx][0] <= newInterval[1]){
-            newInterval[0] = Math.min(newInterval[0], intervals[idx][0]);
-            newInterval[1] = Math.max(newInterval[1], intervals[idx][1]);
-            idx++;
+        if (!isPlaced) {
+            resIntervals.add(newInterval);
         }
-        intervalsList.addLast(newInterval);
         
-        //add later intervals
-        while(idx < intervals.length){
-            intervalsList.addLast(intervals[idx++]);
+        int[][] ans = new int[resIntervals.size()][2];
+        int curIdx = 0;
+        
+        for (int[] interval : resIntervals) {
+            ans[curIdx][0] = interval[0];
+            ans[curIdx][1] = interval[1];
+            curIdx++;
         }
-
-            
-            
-            
-    return intervalsList.toArray(new int[0][0]);    
+        
+        return ans;
     }
         
 
