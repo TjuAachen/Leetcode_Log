@@ -2,7 +2,7 @@ class Solution {
     public int snakesAndLadders(int[][] board) {
         //bfs + distance
         Map<Integer, Integer> distance = new HashMap<>();
-        ArrayList<Integer> queue = new ArrayList<>();
+        PriorityQueue<Integer> queue = new PriorityQueue<>();
         Map<Integer, Pair<Integer, Integer>> val2Idx = new HashMap<>();
         int n = board.length;
         int dest = n * n;
@@ -13,7 +13,7 @@ class Solution {
         queue.add(1);
         distance.put(1, 0);
         while (!queue.isEmpty()) {
-            int popped = queue.remove(0);
+            int popped = queue.poll();
             int curDist = distance.get(popped);
             
             for (int nxt = popped + 1; nxt <= Math.min(dest, popped + 6); nxt++) {
