@@ -1,46 +1,39 @@
-from heapq import *
-class Solution:
-    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
-        #shortest path
-        queue = []
-        distance = defaultdict(int)
+class Solution(object):
+    def findCheapestPrice(self, n, flights, src, dst, k):
+        """
+        :type n: int
+        :type flights: List[List[int]]
+        :type src: int
+        :type dst: int
+        :type k: int
+        :rtype: int
+        """
         graph = defaultdict(list)
-        stopNum = defaultdict(int)
+        queue = deque()
+        distance = defaultdict(int)
+        stop = 0
+        queue.append([0, src])
         
         self.buildGraph(flights, graph)
-        heappush(queue, [0, 0, src])
         
-        while(queue):
-            curDist, curStop, curCity = heappop(queue)
+        #bfs
+        while queue and stop <= k:
+            size = len(queue)
             
-            if curStop > k:
-                continue
-            #soft deletion
-            if curDist > distance[curCity] and curStop > stopNum[curCity]:
-                continue
-            if curCity == dst:
-                if dst in distance:
-                    return min(distance[dst], curDist)
-                return curDist
-            for nxt, nxtPrice in graph[curCity]:
-                nxtDist = nxtPrice + curDist
-
-                if (nxt not in distance or distance[nxt] > nxtDist):
-                    distance[nxt] = nxtDist
-                    stopNum[nxt] = curStop + 1
-                    if curStop + 1 <= k:
-                        heappush(queue, [nxtDist, curStop + 1, nxt])
-                elif stopNum[nxt] > curStop + 1 and curStop + 1 <= k:
-                    #stopNum[nxt] = curStop + 1
-                    heappush(queue, [nxtDist, curStop + 1, nxt])
+            for _ in range(size):
+                curDist, curSrc = queue.popleft()
+                #nxt node
+                for nxt, nxtPrice in graph[curSrc]:
+                    if nxt not in distance or curDist + nxtPrice < distance[nxt]:
+                        distance[nxt] = curDist + nxtPrice
+                        queue.append([distance[nxt], nxt])
+            stop += 1
+            
         
-        if dst not in distance:
-            return -1
-        
-        return distance[dst]
-    
+        if dst in distance:
+            return distance[dst]
+        return -1
     def buildGraph(self, flights, graph):
         for start, end, price in flights:
             graph[start].append([end, price])
-        
         
