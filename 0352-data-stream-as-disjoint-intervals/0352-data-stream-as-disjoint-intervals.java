@@ -9,28 +9,23 @@ class SummaryRanges {
     public void addNum(int value) {
         Integer floorKey = tree_map.floorKey(value);
         Integer ceilingKey = tree_map.ceilingKey(value);
-        //merge with both sides
-        boolean mergeLeft = false;
-        boolean mergeRight = false;
-        
-        if (floorKey != null && tree_map.get(floorKey) + 1 >= value)
-            mergeLeft = true;
-        if (ceilingKey != null && value + 1 == ceilingKey)
-            mergeRight = true;
-        
-        if (mergeLeft == false && mergeRight == false)
-            tree_map.put(value, value);
-        if (mergeLeft && !mergeRight) 
-            tree_map.put(floorKey, Math.max(tree_map.get(floorKey),value));
-        if (mergeRight) {
-            if (mergeLeft) {
-                tree_map.put(floorKey, tree_map.get(ceilingKey));
-            }else {
-                tree_map.put(value, tree_map.get(ceilingKey));
-            }
+        int left = value;
+        int right = value;
+        //merge left
+        if (floorKey != null) {
+            if (tree_map.get(floorKey) >= value)
+                return;
+            if (tree_map.get(floorKey) == value - 1)
+                left = floorKey;
+        }
+        if (ceilingKey != null && ceilingKey == value + 1) {
+            right = tree_map.get(ceilingKey);
             tree_map.remove(ceilingKey);
         }
-    }
+        
+        tree_map.put(left, right);
+        
+        }
     
     public int[][] getIntervals() {
         int n = tree_map.size();
