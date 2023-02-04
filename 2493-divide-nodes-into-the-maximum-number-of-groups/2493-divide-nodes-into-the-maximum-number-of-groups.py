@@ -1,93 +1,61 @@
-class union_set:
-    def __init__(self, n):
+class Solution(object):
+    def magnificentSets(self, n, edges):
+        """
+        :type n: int
+        :type edges: List[List[int]]
+        :rtype: int
+        """
+        #build a graph
+        graph = [[] for _ in range(n)]
+        for x, y in edges:
+            x -= 1
+            y -= 1
+            graph[x].append(y)
+            graph[y].append(x)
+        time = [0] * n
         
-        self.parent = [i for i in range(n)]
-        self.size = [1] * n
-      #  self.minVal = [float('inf')] * n
-    
-    def find(self, node):
-        if node == self.parent[node]:
-            return node
-        self.parent[node] = self.find(self.parent[node])
-        return self.parent[node]
-    
-    def union(self, p, q):
-        parentP, parentQ = self.find(p), self.find(q)
+        global clock
+        clock = 0
         
-        if parentP == parentQ:
-            return
-        
-        if self.size[parentP] <= self.size[parentQ]:
-            self.parent[parentP] = parentQ
-            self.size[parentQ] += self.size[parentP]
-        #    self.minVal[parentQ] = min(self.minVal[parentQ], self.minVal[parentP])
-        else:
-            self.parent[parentQ] = parentP
-            self.size[parentP] += self.size[parentQ]
-          #  self.minVal[parentP] = min(self.minVal[parentQ], self.minVal[parentP])
-
-class Solution:
-    def magnificentSets(self, n: int, edges: List[List[int]]) -> int:
-        
-        #build graph
-        graph = defaultdict(list)
-        maxGroup = 1
-        
-        unionSet = union_set(n)
-        
-        for p, q in edges:
-            graph[p].append(q)
-            graph[q].append(p)
-            unionSet.union(p - 1, q - 1)
-        
-       # totalConnectedNum = 0
-        groupMax = defaultdict(int)
-        
-
-        
-        res = 0
-       # print(graph)
-        
-        for i in range(1, n + 1):
-            groupMax[unionSet.find(i - 1)] = -1
-        
-        for start in range(1, n + 1):
-            curRes, curGroup = self.bfsNum(start, graph)
-            curParent = unionSet.find(start - 1)
-            if curRes == -1:
-                continue
-            groupMax[curParent] = max(groupMax[curParent], curRes)
+        def bfs(start):
+            global clock
+            mx = 0
+            clock += 1 
+            time[start] = clock
+            queue = deque([(start, base)])
             
-
-        for node, val in groupMax.items():
-            if val == -1:
+            while (queue):
+                poppedNode, poppedId = queue.popleft()
+                mx = max(mx, poppedId)
+                for nxt in graph[poppedNode]:
+                    if time[nxt] != clock:
+                        time[nxt] = clock
+                        queue.append((nxt, poppedId + 1))
+            return mx
+        
+        colors = [0] * n
+        
+        def dfs(node, c):
+            nodes.append(node)
+            colors[node] = c
+            for nxt in graph[node]:
+                if colors[nxt] == c or colors[nxt] == 0 and not dfs(nxt, -c):
+                    return False
+            return True
+        base = 0
+        ans = 0
+        
+        for node, c in enumerate(colors):
+            nodes = []
+            if c != 0:
+                continue
+            if not dfs(node, 1):
                 return -1
-            res += val
+            base = ans + 1
+          #  print(nodes, ans, base)
+            for node in nodes:
+                ans = max(bfs(node), ans)
         
-        return res
-    
-    def bfsNum(self, start, graph):
-        
-        queue = deque()
-        group = defaultdict(int)
-        
-        queue.append([start, 1])
-        group[start] = 1
-        
-        res = 1
-        
-        while(queue):
-           # print(queue)
-            popped, curGroupIdx = queue.popleft()
-            res = max(res, curGroupIdx)
-
-            for nxt in graph[popped]:
+        return ans
                 
-                if nxt in group and abs(group[nxt] - curGroupIdx) != 1:
-                  #  print(nxt, group[nxt], curGroupIdx, popped)
-                    return -1, 0
-                if nxt in group:
-                    continue
-                queue.append([nxt, curGroupIdx + 1])
-                group[nxt] = curGroupIdx + 1        
-        return res, len(group)
+            
