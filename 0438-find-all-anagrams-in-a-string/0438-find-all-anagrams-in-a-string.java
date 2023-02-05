@@ -25,18 +25,9 @@ class Solution {
             int right = i + n;
             int leftCharIdx = s.charAt(left) - 'a';
             int rightCharIdx = s.charAt(right) - 'a';
-            if (leftCharIdx != rightCharIdx) {
-                if (target[leftCharIdx] == cur[leftCharIdx]) {
-                    count--;
-                }else if (target[leftCharIdx] == cur[leftCharIdx] - 1) {
-                    count++;
-                }
-                if (target[rightCharIdx] == cur[rightCharIdx]) {
-                    count--;
-                }else if (target[rightCharIdx] == cur[rightCharIdx] + 1) {
-                    count++;
-                }                
-            }
+            
+            count = updateCount(target, cur, leftCharIdx, rightCharIdx, count);
+            
             cur[rightCharIdx]++;
             cur[leftCharIdx]--;
         }
@@ -46,6 +37,23 @@ class Solution {
         
         return res;
         
+    }
+    
+    public int updateCount(int[] target, int[] cur, int leftCharIdx, int rightCharIdx, int count) {
+        if (leftCharIdx != rightCharIdx) {
+            if (target[leftCharIdx] == cur[leftCharIdx]) {
+                count--;
+            }else if (target[leftCharIdx] == cur[leftCharIdx] - 1) {
+                count++;
+            }
+            if (target[rightCharIdx] == cur[rightCharIdx]) {
+                count--;
+            }else if (target[rightCharIdx] == cur[rightCharIdx] + 1) {
+                count++;
+            }                
+        }
+        
+        return count;
     }
     
     public void countChar(String s, String p, int[] res) {
