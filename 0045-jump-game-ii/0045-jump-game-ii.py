@@ -5,19 +5,15 @@ class Solution(object):
         :rtype: int
         """
         n = len(nums)
+        dp = [0] * n
         
-        if n == 1:
-            return 0
+        i = 0
+        for j in range(n):
+            #eliminate the one which cannot reach j
+            while (i < j and i + nums[i] < j):
+                i += 1
+            if i < j:
+                dp[j] = dp[i] + 1
         
-        curMax = 0
-        step = 0
-        prevMax = 0
-        for i, num in enumerate(nums):
-            curMax = max(curMax, num + i)
-            if i >= prevMax and prevMax != n - 1:
-                prevMax = curMax
-                step += 1
-            
-        
-        return step
+        return dp[n - 1]
         
