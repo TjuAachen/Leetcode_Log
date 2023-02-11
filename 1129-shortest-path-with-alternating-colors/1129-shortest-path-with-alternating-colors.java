@@ -25,9 +25,9 @@ class Solution {
             }else {
                 graph = redGraph;
             }
-            if (distance.containsKey(curPair) && distance.get(curPair) < popped[1])
-                continue;
-            distance.put(curPair, popped[1]);
+          //  if (distance.containsKey(curPair)) //&& distance.get(curPair) < popped[1])
+            //    continue;
+            //distance.put(curPair, popped[1]);
             if (!graph.containsKey(popped[0]))
                 continue;
             //nxt blue
