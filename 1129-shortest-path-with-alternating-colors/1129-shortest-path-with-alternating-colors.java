@@ -34,7 +34,7 @@ class Solution {
             for (int nxt : graph.get(popped[0])) {
                 Pair nxtPair = new Pair(nxt, -popped[2]);
                 if (!distance.containsKey(nxtPair)) {//|| distance.get(nxtPair) > popped[1] + 1) {
-                    System.out.printf("%d %d %d", nxt, popped[1] + 1, -popped[2]);
+                  //  System.out.printf("%d %d %d", nxt, popped[1] + 1, -popped[2]);
                     distance.put(nxtPair, popped[1] + 1);
                     int[] nxtPoint = new int[]{nxt, popped[1] + 1, -popped[2]};
                     queue.add(nxtPoint);
