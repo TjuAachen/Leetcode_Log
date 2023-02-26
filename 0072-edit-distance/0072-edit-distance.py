@@ -19,13 +19,14 @@ class Solution:
         res = float('inf')
         if word1[p1] == word2[p2]:
             res = min(res, self.calMin(word1, word2, p1 + 1, p2 + 1))
-        #insert
-        res = min(res, self.calMin(word1, word2, p1, p2 + 1) + 1)
-        #delete
-        res = min(res, self.calMin(word1, word2, p1 + 1, p2) + 1)
-        #replace
-        res = min(res, self.calMin(word1, word2, p1 + 1, p2 + 1) + 1)
-        
+        else:
+            #insert
+            res = min(res, self.calMin(word1, word2, p1, p2 + 1) + 1)
+            #delete
+            res = min(res, self.calMin(word1, word2, p1 + 1, p2) + 1)
+            #replace
+            res = min(res, self.calMin(word1, word2, p1 + 1, p2 + 1) + 1)
+
         self.memo[key] = res
         
         
