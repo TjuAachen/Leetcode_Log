@@ -16,22 +16,13 @@ class Solution {
                 left = mid;
             }
         }
+   //     System.out.printf("%d %d\n", left, right);
+        if (arr[right] - right - 1 < k)
+            return right + k + 1;
+        if (arr[left] - left - 1 < k) {
+            return left + k + 1;
+        }
+        return k;
 
-        if (arr[left] - left - 1 >= k) {
-            return calculateMissing(arr, k, left);
-        }
-        if (arr[right] - right - 1 >= k)
-            return calculateMissing(arr, k, right);
-        
-        return calculateMissing(arr, k, arr.length);
- 
-    }
-    public int calculateMissing(int[] arr, int k, int left) {
-        if (left == 0) {
-            return k;
-        }
-        int leftNum = arr[left - 1];
-        int prevMissingCount = leftNum - left;
-        return leftNum + k - prevMissingCount;
-    }
+}
 }
