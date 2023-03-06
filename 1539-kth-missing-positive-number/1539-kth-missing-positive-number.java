@@ -1,27 +1,37 @@
 class Solution {
     public int findKthPositive(int[] arr, int k) {
-        int expNum = 1;
+        //binary search
+        int left = 0;
+        int right = arr.length - 1;
         
-        if (arr[arr.length - 1] == arr[0] + arr.length - 1 && arr[0] == 1) {
-            return arr[arr.length - 1] + k;
-        }
-        
-        for (int num : arr) {
-            if (num == expNum) {
-                expNum += 1;
-                continue;
+        //find the left boundary
+        while (left + 1 < right) {
+            int mid = left + (right - left) / 2;
+            
+            int curCount = arr[mid] - mid - 1;
+            
+            if (curCount >= k) {
+                right = mid;
+            }else {
+                left = mid;
             }
-            int missingCount = num - expNum;
-            if (missingCount < k) {
-                k -= missingCount;
-                expNum = num + 1;
-                continue;
-            }
-            break;
         }
+
+        if (arr[left] - left - 1 >= k) {
+            return calculateMissing(arr, k, left);
+        }
+        if (arr[right] - right - 1 >= k)
+            return calculateMissing(arr, k, right);
         
-        return expNum + k - 1;
-        
-        
+        return calculateMissing(arr, k, arr.length);
+ 
+    }
+    public int calculateMissing(int[] arr, int k, int left) {
+        if (left == 0) {
+            return k;
+        }
+        int leftNum = arr[left - 1];
+        int prevMissingCount = leftNum - left;
+        return leftNum + k - prevMissingCount;
     }
 }
