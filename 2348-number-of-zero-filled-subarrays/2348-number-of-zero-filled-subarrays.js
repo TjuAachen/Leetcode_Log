@@ -3,31 +3,20 @@
  * @return {number}
  */
 var zeroFilledSubarray = function(nums) {
-    var map = new Map()
-    var curCount = 0
+    var numSubarray = 0;
+    var ans = 0;
     
-    for (var i = 0; i < nums.length; i++) {
-        var num = nums[i]
-        
-        if (num == 0) {
-            curCount += 1
-        }else if (curCount != 0) {
-            map.set(curCount, (map.get(curCount) || 0) + 1)
-            curCount = 0
+    nums.forEach((element) => {
+        if (element == 0) {
+            numSubarray += 1
+        }else {
+            numSubarray = 0;
         }
-    }
-    
-    if (curCount != 0) {
-        map.set(curCount, (map.get(curCount) || 0) + 1)
-    }
-    
-    var ans = 0
-    for (const [key, value] of map) {
-
-        ans += value * (key + 1) * key / 2
-    }
+        ans += numSubarray
+    })
     
     return ans
+    
     
     
     
