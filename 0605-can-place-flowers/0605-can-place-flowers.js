@@ -4,23 +4,20 @@
  * @return {boolean}
  */
 var canPlaceFlowers = function(flowerbed, n) {
-    var flowerbedLength = flowerbed.length
-    var i = 0;
-    
-    while (n > 0 && i < flowerbedLength) {
-        var curPosition = flowerbed[i]
-        if (curPosition == 0) {
-            if (i > 0 && flowerbed[i - 1] == 0 && (i == flowerbedLength - 1 || flowerbed[i + 1] == 0)) {
-                flowerbed[i] = 1
-                n -= 1
-            }else if (i == 0 && (i == flowerbedLength - 1 || flowerbed[i + 1] == 0)) {
-                flowerbed[i] = 1
-                n -= 1
+    var count = 0;
+    for (var i = 0; i < flowerbed.length; i++) {
+        if (flowerbed[i] == 0) {
+            var emptyLeftPlot = (i == 0) || (flowerbed[i - 1] == 0)
+            var emptyRightPlot = (i == flowerbed.length - 1) || (flowerbed[i + 1] == 0)
+            
+            if (emptyLeftPlot && emptyRightPlot) {
+                flowerbed[i] = 1;
+                count++;
             }
         }
-        i += 1
     }
+
     
-    return n == 0
+    return count >= n;
     
 };
