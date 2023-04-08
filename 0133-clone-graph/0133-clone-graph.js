@@ -30,16 +30,13 @@ var cloneGraph = function(node) {
       //  clonedOnes.set(popped, clonedPopped)
         
         for (var nxt of popped.neighbors) {
-            if (clonedOnes.has(nxt)) {
-                clonedPopped.neighbors.push(clonedOnes.get(nxt))
-                continue
+            if (!clonedOnes.has(nxt)) {
+                clonedOnes.set(nxt, new Node(nxt.val))
+                queue.push(nxt)
             }
-            var clonedNext = new Node(nxt.val)
-            clonedOnes.set(nxt, clonedNext)
-            clonedPopped.neighbors.push(clonedNext)
+ 
+            clonedPopped.neighbors.push(clonedOnes.get(nxt))
             
-            
-            queue.push(nxt)
         }
     }
     
